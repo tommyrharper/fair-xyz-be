@@ -71,6 +71,8 @@ npm i -D ts-morph
 npm i @mikro-orm/reflection
 docker run --name nestjs-tutorial --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
 docker container ls # to check the db has been setup
+npm i @mikro-orm/cli
+npm i @mikro-orm/migrations
 ```
 
 Then I opened up pgAdmin. Created a new server:
@@ -87,6 +89,43 @@ Next I created a db using the GUI:
 nest g module student
 nest g service student
 ```
+
+- Then I setup the entities, modules and resolvers. Now it is running you can access the playground: `http://localhost:3000/graphql`
+
+Now I can query:
+```graphql
+query {
+  getStuff
+}
+```
+
+- Next I created migrations:
+```
+npx mikro-orm migration:create
+npx mikro-orm migration:up
+```
+
+- Should now be able to see in pgAdmin: nestjs-tutorial => Databases => nestjs-tutorial => Schemas => Tables => student => Columns (6)
+- Now you can boot the server and execute a mutation
+
+```
+npm run start:dev
+```
+
+Mutation:
+```graphql
+mutation {
+  createStudent(age: 21, name: "John Doe", email: "john@gmail.com") {
+    id
+    name
+    age
+    email
+    createdAt
+    updatedAt
+  }
+}
+```
+
 
 ## Support
 
