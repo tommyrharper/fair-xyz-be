@@ -58,6 +58,36 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Steps I used to set this up
+
+- nodejs version `v16.14.0`
+
+```
+npm i -g @nestjs/cli
+nest new project-name
+npm i @nestjs/graphql @nestjs/apollo graphql apollo-server-express
+npm i -s @mikro-orm/core @mikro-orm/nestjs @mikro-orm/postgresql
+npm i -D ts-morph
+npm i @mikro-orm/reflection
+docker run --name nestjs-tutorial --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+docker container ls # to check the db has been setup
+```
+
+Then I opened up pgAdmin. Created a new server:
+```
+General => Name: nestjs-tutorial
+Connection => Host name/address: localhost. Port => 5432. Password: postgres. Save password => true.
+```
+
+The db is here: Servers -> nestjs-tutorial -> Databases -> postgres;
+Next I created a db using the GUI:
+- Right click Databases -> Create -> Database: nestjs-tutorial -> Save.
+
+```
+nest g module student
+nest g service student
+```
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
