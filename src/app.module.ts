@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StudentModule } from './student/student.module';
+import { ReminderModule } from './reminder/reminder.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { StudentModule } from './student/student.module';
     }),
     MikroOrmModule.forRoot(),
     StudentModule,
+    ReminderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

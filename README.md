@@ -69,7 +69,7 @@ npm i @nestjs/graphql @nestjs/apollo graphql apollo-server-express
 npm i -s @mikro-orm/core @mikro-orm/nestjs @mikro-orm/postgresql
 npm i -D ts-morph
 npm i @mikro-orm/reflection
-docker run --name nestjs-tutorial --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+docker run --name fair-xyz --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
 docker container ls # to check the db has been setup
 npm i @mikro-orm/cli
 npm i @mikro-orm/migrations
@@ -77,17 +77,17 @@ npm i @mikro-orm/migrations
 
 Then I opened up pgAdmin. Created a new server:
 ```
-General => Name: nestjs-tutorial
+General => Name: fair-xyz
 Connection => Host name/address: localhost. Port => 5432. Password: postgres. Save password => true.
 ```
 
-The db is here: Servers -> nestjs-tutorial -> Databases -> postgres;
+The db is here: Servers -> fair-xyz -> Databases -> postgres;
 Next I created a db using the GUI:
-- Right click Databases -> Create -> Database: nestjs-tutorial -> Save.
+- Right click Databases -> Create -> Database: fair-xyz -> Save.
 
 ```
-nest g module student
-nest g service student
+npx nest g module student
+npx nest g service student
 ```
 
 - Then I setup the entities, modules and resolvers. Now it is running you can access the playground: `http://localhost:3000/graphql`
@@ -105,7 +105,7 @@ npx mikro-orm migration:create
 npx mikro-orm migration:up
 ```
 
-- Should now be able to see in pgAdmin: nestjs-tutorial => Databases => nestjs-tutorial => Schemas => Tables => student => Columns (6)
+- Should now be able to see in pgAdmin: fair-xyz => Databases => fair-xyz => Schemas => Tables => student => Columns (6)
 - Now you can boot the server and execute a mutation
 
 ```
@@ -126,6 +126,18 @@ mutation {
 }
 ```
 
+## Reminder functionality
+
+Table of emails:
+- id: ID
+- email: String
+- collection: ID
+
+
+Table of collections:
+- id: ID
+- name: String
+- launchDate: Date | null
 
 ## Support
 

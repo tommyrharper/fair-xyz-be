@@ -8,7 +8,7 @@ const config: Options = {
   port: 5432,
   user: 'postgres',
   password: 'postgres',
-  dbName: 'nestjs-tutorial',
+  dbName: 'fair-xyz',
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   metadataProvider: TsMorphMetadataProvider,
