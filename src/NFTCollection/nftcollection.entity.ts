@@ -1,6 +1,7 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, PrimaryKey, Property, Unique } from '@mikro-orm/core';
 
 @Entity()
+@Unique({ properties: ['name'] })
 export class NFTCollection {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   uuid: string;

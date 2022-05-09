@@ -1,7 +1,14 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+  Unique,
+} from '@mikro-orm/core';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
 
 @Entity()
+@Unique({ properties: ['email', 'collection'] })
 export class Reminder {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   uuid: string;

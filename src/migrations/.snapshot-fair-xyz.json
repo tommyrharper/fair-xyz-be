@@ -60,6 +60,15 @@
       "schema": "public",
       "indexes": [
         {
+          "keyName": "nftcollection_name_unique",
+          "columnNames": [
+            "name"
+          ],
+          "composite": false,
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "nftcollection_pkey",
           "columnNames": [
             "uuid"
@@ -126,6 +135,16 @@
       "name": "reminder",
       "schema": "public",
       "indexes": [
+        {
+          "keyName": "reminder_email_collection_uuid_unique",
+          "columnNames": [
+            "email",
+            "collection_uuid"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
         {
           "keyName": "reminder_pkey",
           "columnNames": [
