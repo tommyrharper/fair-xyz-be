@@ -73,6 +73,7 @@ docker run --name fair-xyz --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d 
 docker container ls # to check the db has been setup
 npm i @mikro-orm/cli
 npm i @mikro-orm/migrations
+npm i nodemailer
 ```
 
 Then I opened up pgAdmin. Created a new server:
