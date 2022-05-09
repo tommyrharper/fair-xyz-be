@@ -115,13 +115,12 @@ npm run start:dev
 Mutation:
 ```graphql
 mutation {
-  createStudent(age: 21, name: "John Doe", email: "john@gmail.com") {
+  createNFTCollection(name: "magic beans") {
     id
-    name
-    age
-    email
     createdAt
     updatedAt
+    name
+    launchDate
   }
 }
 ```
