@@ -7,9 +7,9 @@ export class NFTCollectionResolver {
   constructor(private reminderService: NFTCollectionService) {}
 
   // Queries
-  @Query(() => String)
-  getStuff() {
-    return 'This is working';
+  @Query(() => [NFTCollectionType])
+  getNFTCollections() {
+    return this.reminderService.getNFTCollections();
   }
 
   // Mutations

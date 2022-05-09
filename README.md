@@ -121,13 +121,11 @@ npx mikro-orm migration:up
 npm run start:dev
 ```
 
-Mutation:
+- Mutations:
 ```graphql
 mutation {
   updateNFTCollection(uuid: "112f7f68-a519-445d-beaf-52e21a2d5f6d", launchDate: "2022-05-14 22:11:44+00") {
     uuid
-    createdAt
-    updatedAt
     name
     launchDate
   }
@@ -138,14 +136,23 @@ mutation {
 mutation {
   createReminder(email: "example@gmail.com", collection: "f8f454c9-531b-4984-971d-a432a5991cc9") {
     uuid
-    createdAt
-    updatedAt
 		email
     collection {
       uuid
       name
       launchDate
     }
+  }
+}
+```
+
+- Queries:
+```graphql
+query {
+  getNFTCollections {
+    uuid
+    name
+    launchDate
   }
 }
 ```

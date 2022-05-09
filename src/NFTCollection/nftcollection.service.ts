@@ -21,4 +21,8 @@ export class NFTCollectionService {
     await this.nftCollectionsRepository.persistAndFlush(nftCollection);
     return nftCollection;
   }
+
+  async getNFTCollections(): Promise<NFTCollection[]> {
+    return this.nftCollectionsRepository.findAll();
+  }
 }
