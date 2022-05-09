@@ -2,12 +2,6 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NFTCollectionService } from './nftcollection.service';
 import { NFTCollectionType } from './nftcollection.type';
 
-// @InputType()
-// export class UpvotePostInput {
-//   @Field()
-//   postId: number;
-// }
-
 @Resolver()
 export class NFTCollectionResolver {
   constructor(private reminderService: NFTCollectionService) {}

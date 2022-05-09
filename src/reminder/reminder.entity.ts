@@ -3,8 +3,8 @@ import { NFTCollection } from '../NFTCollection/nftcollection.entity';
 
 @Entity()
 export class Reminder {
-  @PrimaryKey()
-  id!: string;
+  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
+  uuid: string;
 
   @Property()
   createdAt = new Date();

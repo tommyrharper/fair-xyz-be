@@ -102,6 +102,15 @@ query {
 - Next I created migrations:
 ```
 npx mikro-orm migration:create
+
+```
+- I added the following code to the start of the first migration to support our primary key creation:
+```
+this.addSql('create extension "uuid-ossp";');
+```
+
+- Then I ran the migrations:
+```
 npx mikro-orm migration:up
 ```
 

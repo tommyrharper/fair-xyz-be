@@ -4,7 +4,7 @@ import { NFTCollectionType } from 'src/NFTCollection/nftcollection.type';
 @ObjectType()
 export class ReminderType {
   @Field(() => ID)
-  id: string;
+  uuid: string;
 
   @Field()
   createdAt: Date;

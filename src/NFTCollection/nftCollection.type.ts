@@ -3,7 +3,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class NFTCollectionType {
   @Field(() => ID)
-  id: string;
+  uuid: string;
 
   @Field()
   createdAt: Date;

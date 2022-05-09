@@ -6,17 +6,11 @@ import { ReminderType } from './reminder.type';
 export class ReminderResolver {
   constructor(private reminderService: ReminderService) {}
 
-  // Queries
-  // @Query(() => String)
-  // getStuff() {
-  //   return 'This is working';
-  // }
-
   // Mutations
   @Mutation(() => ReminderType)
   createReminder(
     @Args('email') email: string,
-    @Args('collection') collection: number,
+    @Args('collection') collection: string,
   ) {
     return this.reminderService.createReminder(email, collection);
   }

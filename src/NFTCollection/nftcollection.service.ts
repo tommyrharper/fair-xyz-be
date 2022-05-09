@@ -12,12 +12,11 @@ export class NFTCollectionService {
 
   async createNFTCollection(name, launchDate): Promise<NFTCollection> {
     const nftCollection = this.nftCollectionsRepository.create({
-      id: 'test',
       name,
       launchDate,
     });
 
-    this.nftCollectionsRepository.persistAndFlush(nftCollection);
+    await this.nftCollectionsRepository.persistAndFlush(nftCollection);
     return nftCollection;
   }
 }

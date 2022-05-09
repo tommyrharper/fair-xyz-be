@@ -9,8 +9,8 @@ import { Reminder } from '../reminder/reminder.entity';
 
 @Entity()
 export class NFTCollection {
-  @PrimaryKey()
-  id!: string;
+  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
+  uuid: string;
 
   @Property()
   createdAt = new Date();

@@ -6,89 +6,15 @@
   "tables": [
     {
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
-        },
-        "age": {
-          "name": "age",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "integer"
-        }
-      },
-      "name": "student",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "student_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "string"
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
         },
         "created_at": {
           "name": "created_at",
@@ -136,7 +62,7 @@
         {
           "keyName": "nftcollection_pkey",
           "columnNames": [
-            "id"
+            "uuid"
           ],
           "composite": false,
           "primary": true,
@@ -148,14 +74,15 @@
     },
     {
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(255)",
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
         },
         "created_at": {
           "name": "created_at",
@@ -186,14 +113,14 @@
           "nullable": false,
           "mappedType": "string"
         },
-        "collection_id": {
-          "name": "collection_id",
-          "type": "varchar(255)",
+        "collection_uuid": {
+          "name": "collection_uuid",
+          "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "uuid"
         }
       },
       "name": "reminder",
@@ -202,7 +129,7 @@
         {
           "keyName": "reminder_pkey",
           "columnNames": [
-            "id"
+            "uuid"
           ],
           "composite": false,
           "primary": true,
@@ -211,14 +138,14 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "reminder_collection_id_foreign": {
-          "constraintName": "reminder_collection_id_foreign",
+        "reminder_collection_uuid_foreign": {
+          "constraintName": "reminder_collection_uuid_foreign",
           "columnNames": [
-            "collection_id"
+            "collection_uuid"
           ],
           "localTableName": "public.reminder",
           "referencedColumnNames": [
-            "id"
+            "uuid"
           ],
           "referencedTableName": "public.nftcollection",
           "updateRule": "cascade"

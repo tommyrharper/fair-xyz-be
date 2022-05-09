@@ -16,7 +16,7 @@ export class ReminderService {
       collection,
     });
 
-    this.remindersRepository.persistAndFlush(reminder);
+    await this.remindersRepository.persistAndFlush(reminder);
     return reminder;
   }
 }
