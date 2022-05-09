@@ -1,4 +1,5 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { NFTCollection } from '../NFTCollection/nftcollection.entity';
 
 @Entity()
 export class Reminder {
@@ -14,6 +15,6 @@ export class Reminder {
   @Property()
   email!: string;
 
-  @Property()
-  collection!: number;
+  @ManyToOne()
+  collection!: NFTCollection;
 }

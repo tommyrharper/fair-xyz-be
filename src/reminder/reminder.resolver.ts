@@ -7,10 +7,10 @@ export class ReminderResolver {
   constructor(private reminderService: ReminderService) {}
 
   // Queries
-  @Query(() => String)
-  getStuff() {
-    return 'This is working';
-  }
+  // @Query(() => String)
+  // getStuff() {
+  //   return 'This is working';
+  // }
 
   // Mutations
   @Mutation(() => ReminderType)

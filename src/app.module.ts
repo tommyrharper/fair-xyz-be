@@ -4,8 +4,8 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { StudentModule } from './student/student.module';
 import { ReminderModule } from './reminder/reminder.module';
+import { NFTCollectionModule } from './NFTCollection/nftcollection.module';
 
 @Module({
   imports: [
@@ -16,8 +16,8 @@ import { ReminderModule } from './reminder/reminder.module';
       driver: ApolloDriver,
     }),
     MikroOrmModule.forRoot(),
-    StudentModule,
     ReminderModule,
+    NFTCollectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

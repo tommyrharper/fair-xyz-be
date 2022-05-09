@@ -126,6 +126,13 @@ mutation {
 }
 ```
 
+## Quick Start
+
+```
+docker start fair-xyz
+npm run start:dev
+```
+
 ## Reminder functionality
 
 Table of emails:

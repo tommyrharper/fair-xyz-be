@@ -1,8 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { NFTCollectionType } from 'src/NFTCollection/nftcollection.type';
 
 @ObjectType()
-export class ReminderType {
+export class NFTCollectionType {
   @Field(() => ID)
   id: string;
 
@@ -13,8 +12,8 @@ export class ReminderType {
   updatedAt: Date;
 
   @Field()
-  email: string;
+  name: string;
 
-  @Field()
-  collection: NFTCollectionType;
+  @Field({ nullable: true })
+  launchDate?: Date | null;
 }
