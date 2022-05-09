@@ -1,6 +1,7 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
+import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
 import { Reminder } from './reminder.entity';
 
 @Injectable()
@@ -8,6 +9,8 @@ export class ReminderService {
   constructor(
     @InjectRepository(Reminder)
     private remindersRepository: EntityRepository<Reminder>,
+    @InjectRepository(NFTCollection)
+    private nftCollectionsRepository: EntityRepository<NFTCollection>,
   ) {}
 
   async createReminder(email, collection): Promise<Reminder> {
@@ -17,6 +20,14 @@ export class ReminderService {
     });
 
     await this.remindersRepository.persistAndFlush(reminder);
-    return reminder;
+
+    const nftCollection = await this.nftCollectionsRepository.findOne({
+      uuid: collection,
+    });
+
+    return {
+      ...reminder,
+      collection: nftCollection,
+    };
   }
 }

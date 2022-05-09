@@ -1,11 +1,4 @@
-import {
-  Collection,
-  Entity,
-  OneToMany,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/core';
-import { Reminder } from '../reminder/reminder.entity';
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity()
 export class NFTCollection {
@@ -23,7 +16,4 @@ export class NFTCollection {
 
   @Property({ nullable: true })
   launchDate: Date | null;
-
-  // @OneToMany(() => Reminder, (reminder) => reminder.email)
-  // reminders = new Collection<Reminder>(this);
 }

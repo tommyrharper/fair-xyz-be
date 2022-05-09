@@ -1,11 +1,12 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
+import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
 import { Reminder } from './reminder.entity';
 import { ReminderResolver } from './reminder.resolver';
 import { ReminderService } from './reminder.service';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Reminder])],
+  imports: [MikroOrmModule.forFeature([Reminder, NFTCollection])],
   providers: [ReminderService, ReminderResolver],
 })
 export class ReminderModule {}
