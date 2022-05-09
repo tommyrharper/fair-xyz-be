@@ -10,11 +10,13 @@ export class NFTCollectionService {
     private nftCollectionsRepository: EntityRepository<NFTCollection>,
   ) {}
 
-  async createNFTCollection(name, launchDate): Promise<NFTCollection> {
-    const nftCollection = this.nftCollectionsRepository.create({
-      name,
-      launchDate,
+  async updateNFTCollection(uuid, name, launchDate): Promise<NFTCollection> {
+    const nftCollection = await this.nftCollectionsRepository.findOne({
+      uuid,
     });
+
+    if (name) nftCollection.name = name;
+    nftCollection.launchDate = launchDate;
 
     await this.nftCollectionsRepository.persistAndFlush(nftCollection);
     return nftCollection;

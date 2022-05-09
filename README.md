@@ -124,8 +124,8 @@ npm run start:dev
 Mutation:
 ```graphql
 mutation {
-  createNFTCollection(name: "magic beans") {
-    id
+  updateNFTCollection(uuid: "112f7f68-a519-445d-beaf-52e21a2d5f6d", launchDate: "2022-05-14 22:11:44+00") {
+    uuid
     createdAt
     updatedAt
     name

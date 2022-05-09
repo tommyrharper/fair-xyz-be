@@ -14,10 +14,11 @@ export class NFTCollectionResolver {
 
   // Mutations
   @Mutation(() => NFTCollectionType)
-  createNFTCollection(
-    @Args('name') name: string,
+  updateNFTCollection(
+    @Args('uuid') uuid: string,
+    @Args({ name: 'name', nullable: true }) name: string,
     @Args({ name: 'launchDate', nullable: true }) launchDate: Date | null,
   ) {
-    return this.reminderService.createNFTCollection(name, launchDate);
+    return this.reminderService.updateNFTCollection(uuid, name, launchDate);
   }
 }
