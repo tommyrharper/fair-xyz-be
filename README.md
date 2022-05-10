@@ -75,6 +75,7 @@ npm i @mikro-orm/cli
 npm i @mikro-orm/migrations
 npm i nodemailer
 npm i node-cron
+npm i date-fns
 ```
 
 Then I opened up pgAdmin. Created a new server:
