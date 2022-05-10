@@ -1,5 +1,5 @@
 import { addReminderEmailToQueue } from 'src/queues/email.queue';
-import { getDelay, getEmailStrings, getReminderTimes } from './utils';
+import { getEmailStrings, getReminderDelays } from './utils';
 
 interface ScheduleRemindersArgs {
   launchDate: Date;
@@ -15,14 +15,15 @@ export const scheduleReminders = ({
   email,
 }: ScheduleRemindersArgs) => {
   const emailStrings = getEmailStrings(collectionName);
-  const reminderTimes = getReminderTimes(launchDate);
+  const reminderDelays = getReminderDelays(launchDate);
 
-  reminderTimes.forEach((reminderTime, i) => {
-    const emailString = emailStrings[i];
-    const delay = getDelay(reminderTime);
+  reminderDelays.forEach((delay, i) => {
+    const text = emailStrings[i];
     const jobId = `${collectionId}-${email}-${i}`;
+    const emailData = { email, text };
+
     addReminderEmailToQueue({
-      data: { email, text: emailString },
+      emailData,
       delay,
       jobId,
     });

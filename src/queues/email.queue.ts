@@ -13,17 +13,19 @@ export const emailQueue = new Bull('email', redisURI);
 emailQueue.process(sendReminderEmailProcess);
 
 interface AddEmailReminderToQueueArgs {
-  data: SendReminderEmailArgs;
+  emailData: SendReminderEmailArgs;
   delay: number;
   jobId: string;
 }
 
+// TODO: remove obliterate reminder
+
 export const addReminderEmailToQueue = ({
-  data,
+  emailData,
   delay,
   jobId,
 }: AddEmailReminderToQueueArgs) => {
-  emailQueue.add(data, {
+  emailQueue.add(emailData, {
     delay,
     jobId,
     removeOnComplete: true,

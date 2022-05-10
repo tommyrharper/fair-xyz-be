@@ -19,8 +19,13 @@ enum TimeToLaunch {
   thirtyMins = '30 MINS',
 }
 
+export const getReminderDelays = (launchDate: Date) => {
+  const reminderTimes = getReminderTimes(launchDate);
+  return reminderTimes.map(getDelay);
+};
+
 export const getDelay = (date: Date) => {
-  return differenceInMilliseconds(new Date(), date);
+  return differenceInMilliseconds(date, new Date());
 };
 
 export const getReminderTimes = (launchDate: Date) => {
