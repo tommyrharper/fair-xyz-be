@@ -1,6 +1,7 @@
-import { CronJob } from 'cron';
 import { addReminderEmailToQueue } from 'src/queues/email.queue';
-import { getEmailStrings, getReminderTimes } from './utils';
+import { getDelay, getEmailStrings, getReminderTimes } from './utils';
+
+// TODO: Add correct jobid
 
 export const scheduleReminders = (
   launchDate: Date,
@@ -9,14 +10,10 @@ export const scheduleReminders = (
 ) => {
   const emailStrings = getEmailStrings(collectionName);
   const reminderTimes = getReminderTimes(launchDate);
-  const jobs: CronJob[] = [];
 
   reminderTimes.forEach((reminderTime, i) => {
     const emailString = emailStrings[i];
-    addReminderEmailToQueue({ email, text: emailString }, reminderTime);
-    // const job = scheduleJob(reminderTime, sendEmail);
-    // jobs.push(job);
+    const delay = getDelay(reminderTime);
+    addReminderEmailToQueue({ email, text: emailString }, delay);
   });
-
-  // return jobs;
 };

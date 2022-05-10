@@ -1,18 +1,27 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // import nodemailer from 'nodemailer';
 const nodemailer = require('nodemailer');
-import { CronJob } from 'cron';
-import { addMinutes, addHours, addDays } from 'date-fns';
-import { emailQueue } from 'src/queues/email.queue';
-import { Job } from 'bull';
+import {
+  addMinutes,
+  addHours,
+  addDays,
+  differenceInMilliseconds,
+} from 'date-fns';
 
 const NODE_MAILER_HOST = 'smtp.ethereal.email';
 const NODE_MAILER_PORT = 587;
+
+// TODO: remove enum
 
 enum TimeToLaunch {
   oneDay = '1 DAY',
   oneHour = '1 HOUR',
   thirtyMins = '30 MINS',
 }
+
+export const getDelay = (date: Date) => {
+  return differenceInMilliseconds(new Date(), date);
+};
 
 export const getReminderTimes = (launchDate: Date) => {
   return [
@@ -32,15 +41,6 @@ export const getEmailStrings = (collectionName: string) => {
     `${upperCaseName} IS LAUNCHING NOW!`,
   ];
 };
-
-// export const scheduleJob = (time: Date, onStart: () => void) => {
-//   emailQueue.add(data, {
-//     delay: 1000,
-//     jobId: 'example',
-//     removeOnComplete: true,
-//   });
-//   // return new CronJob(time, onStart, null, true);
-// };
 
 interface SendEmailArgs {
   from: string;

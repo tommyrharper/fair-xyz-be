@@ -14,12 +14,12 @@ emailQueue.process(sendReminderEmailProcess);
 
 export const addReminderEmailToQueue = (
   data: SendReminderEmailArgs,
-  reminderTime: Date,
+  delay: number,
 ) => {
   console.log('about to add to Queue');
   // emailQueue.add(data, {});
   emailQueue.add(data, {
-    delay: 1000,
+    delay,
     // jobId: 'example',
     removeOnComplete: true,
   });
