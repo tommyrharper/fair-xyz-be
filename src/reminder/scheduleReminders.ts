@@ -1,8 +1,6 @@
 import { addReminderEmailToQueue } from 'src/queues/email.queue';
 import { getDelay, getEmailStrings, getReminderTimes } from './utils';
 
-// TODO: Add correct jobid, remove cron
-
 interface ScheduleRemindersArgs {
   launchDate: Date;
   collectionName: string;

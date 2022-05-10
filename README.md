@@ -76,8 +76,8 @@ npm i @mikro-orm/cli
 npm i @mikro-orm/migrations
 npm i nodemailer
 npm install --save @types/nodemailer
-npm i cron
-npm install --save -D @types/cron
+npm i bull
+npm install --save -D @types/bull
 npm i date-fns
 ```
 
