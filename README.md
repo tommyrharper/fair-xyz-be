@@ -70,6 +70,7 @@ npm i -s @mikro-orm/core @mikro-orm/nestjs @mikro-orm/postgresql
 npm i -D ts-morph
 npm i @mikro-orm/reflection
 docker run --name fair-xyz --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+docker run --name redis-fair-xyz -d -p 6379:6379 redis:6.0
 docker container ls # to check the db has been setup
 npm i @mikro-orm/cli
 npm i @mikro-orm/migrations
