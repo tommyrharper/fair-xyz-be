@@ -12,15 +12,20 @@ export const emailQueue = new Bull('email', redisURI);
 
 emailQueue.process(sendReminderEmailProcess);
 
-export const addReminderEmailToQueue = (
-  data: SendReminderEmailArgs,
-  delay: number,
-) => {
-  console.log('about to add to Queue');
-  // emailQueue.add(data, {});
+interface AddEmailReminderToQueueArgs {
+  data: SendReminderEmailArgs;
+  delay: number;
+  jobId: string;
+}
+
+export const addReminderEmailToQueue = ({
+  data,
+  delay,
+  jobId,
+}: AddEmailReminderToQueueArgs) => {
   emailQueue.add(data, {
     delay,
-    // jobId: 'example',
+    jobId,
     removeOnComplete: true,
   });
 

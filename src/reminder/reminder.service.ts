@@ -28,11 +28,12 @@ export class ReminderService {
       uuid: collection,
     });
 
-    scheduleReminders(
-      nftCollection.launchDate,
-      nftCollection.name,
-      reminder.email,
-    );
+    scheduleReminders({
+      launchDate: nftCollection.launchDate,
+      collectionName: nftCollection.name,
+      email: reminder.email,
+      collectionId: nftCollection.uuid,
+    });
 
     return {
       uuid: 'beans',
