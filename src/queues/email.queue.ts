@@ -1,20 +1,26 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // import Bull from 'bull';
 const Bull = require('bull');
-import { emailProcess } from 'src/processes/email.process';
+import {
+  sendReminderEmailProcess,
+  SendReminderEmailArgs,
+} from 'src/processes/email.process';
 
 const redisURI = 'redis://127.0.0.1';
 
-const emailQueue = new Bull('email', redisURI);
+export const emailQueue = new Bull('email', redisURI);
 
-emailQueue.process(emailProcess);
+emailQueue.process(sendReminderEmailProcess);
 
-export const sendNewEmail = (data) => {
+export const addReminderEmailToQueue = (
+  data: SendReminderEmailArgs,
+  reminderTime: Date,
+) => {
   console.log('about to add to Queue');
   // emailQueue.add(data, {});
   emailQueue.add(data, {
     delay: 1000,
-    jobId: 'example',
+    // jobId: 'example',
     removeOnComplete: true,
   });
 

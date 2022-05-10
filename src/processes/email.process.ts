@@ -1,7 +1,19 @@
 import { Job } from 'bull';
+import { sendEmail } from 'src/reminder/utils';
 
-export const emailProcess = async (job: Job, done) => {
-  console.log('inside email Process');
-  console.log('job.data', job.data);
-  done();
+export interface SendReminderEmailArgs {
+  email: string;
+  text: string;
+}
+
+export const sendReminderEmailProcess = async ({
+  data: { email, text },
+}: Job<SendReminderEmailArgs>) => {
+  sendEmail({
+    from: '"Tom 👻" <tom@fair.xyz>',
+    to: email,
+    subject: 'NFT Launch Reminder',
+    text,
+    html: `<b>${text}</b>`,
+  });
 };

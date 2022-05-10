@@ -1,6 +1,9 @@
-import nodemailer from 'nodemailer';
+// import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer');
 import { CronJob } from 'cron';
 import { addMinutes, addHours, addDays } from 'date-fns';
+import { emailQueue } from 'src/queues/email.queue';
+import { Job } from 'bull';
 
 const NODE_MAILER_HOST = 'smtp.ethereal.email';
 const NODE_MAILER_PORT = 587;
@@ -30,9 +33,14 @@ export const getEmailStrings = (collectionName: string) => {
   ];
 };
 
-export const scheduleJob = (time: Date, onStart: () => void) => {
-  return new CronJob(time, onStart, null, true);
-};
+// export const scheduleJob = (time: Date, onStart: () => void) => {
+//   emailQueue.add(data, {
+//     delay: 1000,
+//     jobId: 'example',
+//     removeOnComplete: true,
+//   });
+//   // return new CronJob(time, onStart, null, true);
+// };
 
 interface SendEmailArgs {
   from: string;
@@ -41,16 +49,6 @@ interface SendEmailArgs {
   text: string;
   html: string;
 }
-
-export const sendReminderEmail = async (email: string, text: string) => {
-  sendEmail({
-    from: '"Tom 👻" <tom@fair.xyz>',
-    to: email,
-    subject: 'NFT Launch Reminder',
-    text,
-    html: `<b>${text}</b>`,
-  });
-};
 
 export const sendEmail = async ({
   from,

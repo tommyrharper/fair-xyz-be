@@ -3,7 +3,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { CronJob } from 'cron';
 import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
-import { sendNewEmail } from 'src/queues/email.queue';
+// import { sendNewEmail } from 'src/queues/email.queue';
 import { Reminder } from './reminder.entity';
 import { scheduleReminders } from './scheduleReminders';
 
@@ -43,7 +43,7 @@ export class ReminderService {
 
     // reminderJobs[nftCollection.uuid] = jobs;
 
-    sendNewEmail({ magic: 'magic' });
+    // sendNewEmail({ magic: 'magic' });
 
     return {
       uuid: 'beans',
