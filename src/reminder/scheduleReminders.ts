@@ -1,3 +1,4 @@
+import { CronJob } from 'cron';
 import {
   getEmailStrings,
   getReminderTimes,
@@ -12,7 +13,7 @@ export const scheduleReminders = (
 ) => {
   const emailStrings = getEmailStrings(collectionName);
   const reminderTimes = getReminderTimes(launchDate);
-  const jobs = [];
+  const jobs: CronJob[] = [];
 
   reminderTimes.forEach((reminderTime, i) => {
     const emailString = emailStrings[i];

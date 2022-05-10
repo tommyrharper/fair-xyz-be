@@ -74,9 +74,10 @@ docker container ls # to check the db has been setup
 npm i @mikro-orm/cli
 npm i @mikro-orm/migrations
 npm i nodemailer
-npm i node-cron
-npm i date-fns
+npm install --save @types/nodemailer
+npm i cron
 npm install --save -D @types/cron
+npm i date-fns
 ```
 
 Then I opened up pgAdmin. Created a new server:

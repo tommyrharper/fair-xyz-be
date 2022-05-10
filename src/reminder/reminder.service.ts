@@ -1,15 +1,17 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
+import { CronJob } from 'cron';
 import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
 import { Reminder } from './reminder.entity';
 import { scheduleReminders } from './scheduleReminders';
 
 interface ReminderJobsMap {
-  [email: string]: any[];
+  [collectionUuid: string]: CronJob[];
 }
 
-const reminderJobs = [];
+// In production would persist in redis or similar
+export const reminderJobs: ReminderJobsMap = {};
 
 @Injectable()
 export class ReminderService {
@@ -38,7 +40,7 @@ export class ReminderService {
       reminder.email,
     );
 
-    reminderJobs.push(...[jobs]);
+    reminderJobs[nftCollection.uuid] = jobs;
 
     return {
       ...reminder,

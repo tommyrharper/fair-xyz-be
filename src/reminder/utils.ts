@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const nodemailer = require('nodemailer');
-const { CronJob } = require('cron');
-const { addMinutes, addHours, addDays } = require('date-fns');
+import nodemailer from 'nodemailer';
+import { CronJob } from 'cron';
+import { addMinutes, addHours, addDays } from 'date-fns';
 
 const NODE_MAILER_HOST = 'smtp.ethereal.email';
 const NODE_MAILER_PORT = 587;
