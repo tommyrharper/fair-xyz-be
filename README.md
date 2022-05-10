@@ -76,6 +76,7 @@ npm i @mikro-orm/migrations
 npm i nodemailer
 npm i node-cron
 npm i date-fns
+npm install --save -D @types/cron
 ```
 
 Then I opened up pgAdmin. Created a new server:

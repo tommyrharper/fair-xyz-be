@@ -5,6 +5,12 @@ import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
 import { Reminder } from './reminder.entity';
 import { scheduleReminders } from './scheduleReminders';
 
+interface ReminderJobsMap {
+  [email: string]: any[];
+}
+
+const reminderJobs = [];
+
 @Injectable()
 export class ReminderService {
   constructor(
@@ -26,11 +32,13 @@ export class ReminderService {
       uuid: collection,
     });
 
-    scheduleReminders(
-      collection.launchDate,
+    const jobs = scheduleReminders(
+      nftCollection.launchDate,
       nftCollection.name,
       reminder.email,
     );
+
+    reminderJobs.push(...[jobs]);
 
     return {
       ...reminder,
