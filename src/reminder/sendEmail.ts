@@ -1,52 +1,25 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const nodemailer = require('nodemailer');
+import { getEmailStrings, scheduleJob, sendReminderEmail } from './utils';
 
-const sendReminder = async (email: string, launchDate: Date) => {
-  let text = '';
-
-  sendEmail({
-    from: '"Tom 👻" <tom@fair.xyz>',
-    to: email,
-    subject: 'Hello ✔',
-    text,
-    html: `<b>${text}</b>`,
+const scheduleReminders = (launchDate: Date, collectionName: string, email: string) => {
+  const emailStrings = getEmailStrings(collectionName);
+  const job1 = scheduleJob(reminderTime, () => {
+    sendReminderEmail(email, emailStrings[0]);
+  });
+  const job2 = scheduleJob(reminderTime, () => {
+    sendReminderEmail(email, emailStrings[1]);
+  });
+  const job3 = scheduleJob(reminderTime, () => {
+    sendReminderEmail(email, emailStrings[2]);
+  });
+  const job4 = scheduleJob(reminderTime, () => {
+    sendReminderEmail(email, emailStrings[3]);
   });
 };
 
-interface SendEmailArgs {
-  from: string;
-  to: string;
-  subject: string;
-  text: string;
-  html: string;
-}
-
-const sendEmail = async ({ from, to, subject, text, html }: SendEmailArgs) => {
-  // Using a test account for the purposes of this exercise
-  const testAccount = await nodemailer.createTestAccount();
-
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
+const scheduleReminder = (reminderTime: Date, email: string, text: string) => {
+  return scheduleJob(reminderTime, () => {
+    sendReminderEmail(email, text);
   });
-
-  // send mail with defined transport object
-  const info = await transporter.sendMail({
-    from,
-    to,
-    subject,
-    text,
-    html,
-  });
-
-  console.log('Message sent: %s', info.messageId);
-  // Preview only available when sending through an Ethereal account
-  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 };
 
-sendReminder('tom@gmail.com', new Date()).catch(console.error);
+// sendReminder('tom@gmail.com', new Date()).catch(console.error);
