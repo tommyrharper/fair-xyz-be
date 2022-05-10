@@ -3,6 +3,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
 import { Reminder } from './reminder.entity';
+import { scheduleReminders } from './scheduleReminders';
 
 @Injectable()
 export class ReminderService {
@@ -24,6 +25,12 @@ export class ReminderService {
     const nftCollection = await this.nftCollectionsRepository.findOne({
       uuid: collection,
     });
+
+    scheduleReminders(
+      collection.launchDate,
+      nftCollection.name,
+      reminder.email,
+    );
 
     return {
       ...reminder,
