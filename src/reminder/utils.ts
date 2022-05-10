@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-// import nodemailer from 'nodemailer';
-const nodemailer = require('nodemailer');
+import * as nodemailer from 'nodemailer';
+
 import {
   addMinutes,
   addHours,
@@ -10,14 +9,6 @@ import {
 
 const NODE_MAILER_HOST = 'smtp.ethereal.email';
 const NODE_MAILER_PORT = 587;
-
-// TODO: remove enum
-
-enum TimeToLaunch {
-  oneDay = '1 DAY',
-  oneHour = '1 HOUR',
-  thirtyMins = '30 MINS',
-}
 
 export const getReminderDelays = (launchDate: Date) => {
   const reminderTimes = getReminderTimes(launchDate);
@@ -40,9 +31,9 @@ export const getReminderTimes = (launchDate: Date) => {
 export const getEmailStrings = (collectionName: string) => {
   const upperCaseName = collectionName.toUpperCase();
   return [
-    `REMINDER - THE COLLECTION ${upperCaseName} LAUNCHES IN ${TimeToLaunch.oneDay}`,
-    `REMINDER - THE COLLECTION ${upperCaseName} LAUNCHES IN ${TimeToLaunch.oneHour}`,
-    `REMINDER - THE COLLECTION ${upperCaseName} LAUNCHES IN ${TimeToLaunch.thirtyMins}`,
+    `REMINDER - THE COLLECTION ${upperCaseName} LAUNCHES IN 1 DAY`,
+    `REMINDER - THE COLLECTION ${upperCaseName} LAUNCHES IN 1 HOUR`,
+    `REMINDER - THE COLLECTION ${upperCaseName} LAUNCHES IN 30 MINS`,
     `${upperCaseName} IS LAUNCHING NOW!`,
   ];
 };

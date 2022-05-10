@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-// import Bull from 'bull';
-const Bull = require('bull');
+import * as Bull from 'bull';
+
 import {
   sendReminderEmailProcess,
   SendReminderEmailArgs,
@@ -18,7 +17,7 @@ interface AddEmailReminderToQueueArgs {
   jobId: string;
 }
 
-// TODO: remove obliterate reminder
+// TODO: remove obliterate reminder, use delay
 
 export const addReminderEmailToQueue = ({
   emailData,
@@ -26,7 +25,7 @@ export const addReminderEmailToQueue = ({
   jobId,
 }: AddEmailReminderToQueueArgs) => {
   emailQueue.add(emailData, {
-    delay,
+    delay: 100,
     jobId,
     removeOnComplete: true,
   });
