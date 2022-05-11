@@ -16,8 +16,8 @@ export class NFTCollectionResolver {
   @Mutation(() => NFTCollectionType)
   updateNFTCollection(
     @Args('uuid') uuid: string,
-    @Args({ name: 'name', nullable: true }) name: string,
-    @Args({ name: 'launchDate', nullable: true }) launchDate: Date | null,
+    @Args({ name: 'name', nullable: true }) name?: string,
+    @Args({ name: 'launchDate', nullable: true }) launchDate?: Date | null,
   ) {
     return this.reminderService.updateNFTCollection(uuid, name, launchDate);
   }

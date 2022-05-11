@@ -16,7 +16,7 @@ export class ReminderService {
     private nftCollectionsRepository: EntityRepository<NFTCollection>,
   ) {}
 
-  async createReminder(email, collection): Promise<Reminder> {
+  async createReminder(email: string, collection: string): Promise<Reminder> {
     const reminder = this.remindersRepository.create({
       email,
       collection,

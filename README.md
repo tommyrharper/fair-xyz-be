@@ -167,6 +167,7 @@ query {
 
 ```
 docker start fair-xyz
+docker start redis-fair-xyz
 npm run start:dev
 ```
 

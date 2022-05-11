@@ -1,7 +1,9 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
+import { handleUpdatingReminderJobs } from 'src/queues/utils';
 import { NFTCollection } from './nftcollection.entity';
+import { handleUpdateCollection } from './utils';
 
 @Injectable()
 export class NFTCollectionService {
@@ -10,15 +12,25 @@ export class NFTCollectionService {
     private nftCollectionsRepository: EntityRepository<NFTCollection>,
   ) {}
 
-  async updateNFTCollection(uuid, name, launchDate): Promise<NFTCollection> {
+  async updateNFTCollection(
+    uuid: string,
+    name?: string,
+    launchDate?: Date | null,
+  ): Promise<NFTCollection> {
+    const { nftCollectionsRepository } = this;
     const nftCollection = await this.nftCollectionsRepository.findOne({
       uuid,
     });
 
-    if (name) nftCollection.name = name;
-    nftCollection.launchDate = launchDate;
+    await handleUpdateCollection({
+      nftCollection,
+      nftCollectionsRepository,
+      name,
+      launchDate,
+    });
 
-    await this.nftCollectionsRepository.persistAndFlush(nftCollection);
+    handleUpdatingReminderJobs();
+
     return nftCollection;
   }
 
