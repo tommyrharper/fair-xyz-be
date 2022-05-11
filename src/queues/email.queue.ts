@@ -12,12 +12,14 @@ export const emailQueue = new Bull('email', redisURI);
 
 emailQueue.process(sendReminderEmailProcess);
 
-type EmailJob = {
+export type EmailReminderJob = {
   name?: string | undefined;
   data: ReminderEmailData;
   opts?: Omit<JobOptions, 'repeat'>;
 };
 
-export const addReminderEmailsToQueue = (emailJobs: Array<EmailJob>) => {
+export const addEmailReminderJobsToQueue = (
+  emailJobs: Array<EmailReminderJob>,
+) => {
   return emailQueue.addBulk(emailJobs);
 };
