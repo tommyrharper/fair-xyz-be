@@ -17,7 +17,7 @@ interface AddEmailReminderToQueueArgs {
   jobId: string;
 }
 
-// TODO: remove obliterate reminder, use delay, optimize to use addBulk
+// TODO: optimize to use addBulk
 
 export const addReminderEmailToQueue = ({
   emailData,
@@ -25,10 +25,8 @@ export const addReminderEmailToQueue = ({
   jobId,
 }: AddEmailReminderToQueueArgs) => {
   emailQueue.add(emailData, {
-    delay: 100,
+    delay,
     jobId,
     removeOnComplete: true,
   });
-
-  // emailQueue.obliterate();
 };

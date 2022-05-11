@@ -32,8 +32,6 @@ export class NFTCollectionService {
       newLaunchDate,
     });
 
-    console.log('shouldUpdateCollection', shouldUpdateCollection);
-
     if (shouldUpdateCollection) {
       await handleUpdateCollection({
         nftCollection,

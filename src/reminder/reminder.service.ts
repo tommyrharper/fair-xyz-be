@@ -2,10 +2,8 @@ import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
+import { scheduleReminders } from 'src/queues/utils';
 import { Reminder } from './reminder.entity';
-import { scheduleReminders } from './scheduleReminders';
-
-// TODO: uncomment persist and flush and remove fake uuid from response
 
 @Injectable()
 export class ReminderService {
@@ -36,7 +34,6 @@ export class ReminderService {
     });
 
     return {
-      // uuid: 'beans',
       ...reminder,
       collection: nftCollection,
     };
