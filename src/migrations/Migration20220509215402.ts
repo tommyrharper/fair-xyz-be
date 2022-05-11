@@ -37,5 +37,7 @@ export class Migration20220509215402 extends Migration {
     this.addSql('drop table if exists "nftcollection" cascade;');
 
     this.addSql('drop table if exists "reminder" cascade;');
+
+    this.addSql('drop extension "uuid-ossp";');
   }
 }

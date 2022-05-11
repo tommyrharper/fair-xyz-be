@@ -21,4 +21,8 @@ export class Migration20220509215818 extends Migration {
       "INSERT INTO public.nftcollection(name, created_at, updated_at, launch_date) VALUES ('NFT Mania', current_timestamp, current_timestamp, current_timestamp + INTERVAL '5 DAYS');",
     );
   }
+
+  async down(): Promise<void> {
+    return undefined;
+  }
 }
