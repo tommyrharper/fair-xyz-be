@@ -1,4 +1,4 @@
-import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { MikroOrmModule, MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { ApolloDriver } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -18,6 +18,24 @@ import {
   MikroORM,
 } from '@mikro-orm/core';
 
+const INITIAL_MIGRATION = 'Migration20220509215402';
+
+const TEST_DB_CONFIG: MikroOrmModuleSyncOptions = {
+  type: 'postgresql',
+  host: 'localhost',
+  port: 5432,
+  user: 'postgres',
+  password: 'postgres',
+  dbName: 'fair-xyz-test',
+  entities: ['dist/**/*.entity.js'],
+  entitiesTs: ['src/**/*.entity.ts'],
+  metadataProvider: TsMorphMetadataProvider,
+  migrations: {
+    path: path.join(__dirname, '../migrations'),
+    glob: '!(*.d).{js,ts}',
+  },
+};
+
 describe('ReminderService', () => {
   let service: ReminderService;
   let migrator: IMigrator;
@@ -32,21 +50,7 @@ describe('ReminderService', () => {
           autoSchemaFile: true,
           driver: ApolloDriver,
         }),
-        MikroOrmModule.forRoot({
-          type: 'postgresql',
-          host: 'localhost',
-          port: 5432,
-          user: 'postgres',
-          password: 'postgres',
-          dbName: 'fair-xyz-test',
-          entities: ['dist/**/*.entity.js'],
-          entitiesTs: ['src/**/*.entity.ts'],
-          metadataProvider: TsMorphMetadataProvider,
-          migrations: {
-            path: path.join(__dirname, '../migrations'),
-            glob: '!(*.d).{js,ts}',
-          },
-        }),
+        MikroOrmModule.forRoot(TEST_DB_CONFIG),
         MikroOrmModule.forFeature([Reminder, NFTCollection]),
         ReminderModule,
         NFTCollectionModule,
@@ -54,21 +58,7 @@ describe('ReminderService', () => {
       providers: [AppService, ReminderService, ReminderResolver],
     }).compile();
 
-    orm = await MikroORM.init({
-      type: 'postgresql',
-      host: 'localhost',
-      port: 5432,
-      user: 'postgres',
-      password: 'postgres',
-      dbName: 'fair-xyz-test',
-      entities: ['dist/**/*.entity.js'],
-      entitiesTs: ['src/**/*.entity.ts'],
-      metadataProvider: TsMorphMetadataProvider,
-      migrations: {
-        path: path.join(__dirname, '../migrations'),
-        glob: '!(*.d).{js,ts}',
-      },
-    });
+    orm = await MikroORM.init(TEST_DB_CONFIG);
 
     migrator = orm.getMigrator();
     await migrator.up();
@@ -76,7 +66,7 @@ describe('ReminderService', () => {
   });
 
   afterEach(async () => {
-    await migrator.down({ to: 'Migration20220509215402' });
+    await migrator.down({ to: INITIAL_MIGRATION });
     await orm.close(true);
   });
 
