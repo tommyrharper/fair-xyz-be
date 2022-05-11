@@ -2,34 +2,51 @@ import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { handleUpdatingReminderJobs } from 'src/queues/utils';
+import { Reminder } from 'src/reminder/reminder.entity';
 import { NFTCollection } from './nftcollection.entity';
-import { handleUpdateCollection } from './utils';
+import { getShouldUpdateCollection, handleUpdateCollection } from './utils';
 
 @Injectable()
 export class NFTCollectionService {
   constructor(
+    @InjectRepository(Reminder)
+    private remindersRepository: EntityRepository<Reminder>,
     @InjectRepository(NFTCollection)
     private nftCollectionsRepository: EntityRepository<NFTCollection>,
   ) {}
 
   async updateNFTCollection(
     uuid: string,
-    name?: string,
-    launchDate?: Date | null,
+    newName?: string,
+    newLaunchDate?: Date | null,
   ): Promise<NFTCollection> {
-    const { nftCollectionsRepository } = this;
+    const { nftCollectionsRepository, remindersRepository } = this;
     const nftCollection = await this.nftCollectionsRepository.findOne({
       uuid,
     });
 
-    await handleUpdateCollection({
-      nftCollection,
-      nftCollectionsRepository,
-      name,
-      launchDate,
+    const shouldUpdateCollection = getShouldUpdateCollection({
+      oldName: nftCollection.name,
+      oldLaunchDate: nftCollection.launchDate,
+      newName,
+      newLaunchDate,
     });
 
-    handleUpdatingReminderJobs();
+    console.log('shouldUpdateCollection', shouldUpdateCollection);
+
+    if (shouldUpdateCollection) {
+      await handleUpdateCollection({
+        nftCollection,
+        nftCollectionsRepository,
+        newName,
+        newLaunchDate,
+      });
+
+      handleUpdatingReminderJobs({
+        remindersRepository,
+        nftCollection,
+      });
+    }
 
     return nftCollection;
   }

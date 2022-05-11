@@ -22,7 +22,7 @@ export class ReminderService {
       collection,
     });
 
-    // await this.remindersRepository.persistAndFlush(reminder);
+    await this.remindersRepository.persistAndFlush(reminder);
 
     const nftCollection = await this.nftCollectionsRepository.findOne({
       uuid: collection,
@@ -36,7 +36,7 @@ export class ReminderService {
     });
 
     return {
-      uuid: 'beans',
+      // uuid: 'beans',
       ...reminder,
       collection: nftCollection,
     };

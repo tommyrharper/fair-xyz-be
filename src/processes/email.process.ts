@@ -9,6 +9,7 @@ export interface SendReminderEmailArgs {
 export const sendReminderEmailProcess = async ({
   data: { email, text },
 }: Job<SendReminderEmailArgs>) => {
+  console.log('sending email', email, text);
   sendEmail({
     from: '"Tom 👻" <tom@fair.xyz>',
     to: email,
