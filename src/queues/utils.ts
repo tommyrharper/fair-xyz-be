@@ -1,13 +1,13 @@
 import { EntityRepository, Loaded } from '@mikro-orm/core';
-import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
-import { ReminderEmailData } from 'src/processes/email.process';
+import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+import { ReminderEmailData } from '../processes/email.process';
 import {
   addEmailReminderJobsToQueue,
   emailQueue,
   EmailReminderJob,
-} from 'src/queues/email.queue';
-import { Reminder } from 'src/reminder/reminder.entity';
-import { getEmailStrings, getReminderDelays } from 'src/reminder/utils';
+} from '../queues/email.queue';
+import { Reminder } from '../reminder/reminder.entity';
+import { getEmailStrings, getReminderDelays } from '../reminder/utils';
 
 const getEmailReminderJobs = ({
   launchDate,

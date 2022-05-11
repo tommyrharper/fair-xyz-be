@@ -1,5 +1,5 @@
 import { Job } from 'bull';
-import { sendEmail } from 'src/reminder/utils';
+import { sendEmail } from '../reminder/utils';
 
 export interface ReminderEmailData {
   email: string;

@@ -1,8 +1,8 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { handleUpdatingReminderJobs } from 'src/queues/utils';
-import { Reminder } from 'src/reminder/reminder.entity';
+import { handleUpdatingReminderJobs } from '../queues/utils';
+import { Reminder } from '../reminder/reminder.entity';
 import { NFTCollection } from './nftcollection.entity';
 import { getShouldUpdateCollection, handleUpdateCollection } from './utils';
 

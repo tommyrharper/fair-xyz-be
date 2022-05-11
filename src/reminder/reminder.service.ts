@@ -1,8 +1,8 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
-import { scheduleReminders } from 'src/queues/utils';
+import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+import { scheduleReminders } from '../queues/utils';
 import { Reminder } from './reminder.entity';
 
 @Injectable()

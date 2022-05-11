@@ -1,4 +1,4 @@
-import { Reminder } from 'src/reminder/reminder.entity';
+import { Reminder } from '../reminder/reminder.entity';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { NFTCollection } from './nftcollection.entity';

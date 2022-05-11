@@ -4,7 +4,7 @@ import { JobOptions } from 'bull';
 import {
   sendReminderEmailProcess,
   ReminderEmailData,
-} from 'src/processes/email.process';
+} from '../processes/email.process';
 
 const redisURI = 'redis://127.0.0.1';
 
