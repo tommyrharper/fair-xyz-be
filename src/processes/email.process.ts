@@ -1,14 +1,14 @@
 import { Job } from 'bull';
 import { sendEmail } from 'src/reminder/utils';
 
-export interface SendReminderEmailArgs {
+export interface ReminderEmailData {
   email: string;
   text: string;
 }
 
 export const sendReminderEmailProcess = async ({
   data: { email, text },
-}: Job<SendReminderEmailArgs>) => {
+}: Job<ReminderEmailData>) => {
   console.log('sending email', email, text);
   sendEmail({
     from: '"Tom 👻" <tom@fair.xyz>',

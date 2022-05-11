@@ -1,6 +1,6 @@
 import { EntityRepository, Loaded } from '@mikro-orm/core';
 import { NFTCollection } from 'src/NFTCollection/nftcollection.entity';
-import { addReminderEmailToQueue, emailQueue } from 'src/queues/email.queue';
+import { addReminderEmailsToQueue, emailQueue } from 'src/queues/email.queue';
 import { Reminder } from 'src/reminder/reminder.entity';
 import { getEmailStrings, getReminderDelays } from 'src/reminder/utils';
 
@@ -20,17 +20,21 @@ export const scheduleReminders = ({
   const emailStrings = getEmailStrings(collectionName);
   const reminderDelays = getReminderDelays(launchDate);
 
-  reminderDelays.forEach((delay, i) => {
+  const emailJobs = reminderDelays.map((delay, i) => {
     const text = emailStrings[i];
     const jobId = `${collectionId}-${email}-${i}`;
-    const emailData = { email, text };
-
-    addReminderEmailToQueue({
-      emailData,
-      delay,
-      jobId,
-    });
+    const data = { email, text };
+    return {
+      data,
+      opts: {
+        delay: 100,
+        jobId,
+        removeOnComplete: true,
+      },
+    };
   });
+
+  return addReminderEmailsToQueue(emailJobs);
 };
 
 export const deleteAllJobsForCollection = (collectionId: string) => {
