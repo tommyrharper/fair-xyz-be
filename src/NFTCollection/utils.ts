@@ -14,7 +14,7 @@ export const getShouldUpdateLaunchDate = ({
 
   const launchDateCleared = newLaunchDate === null && oldLaunchDate !== null;
   const launchDateUpdated =
-    newLaunchDate && newLaunchDate.toDateString() !== oldLaunchDateString;
+    !!newLaunchDate && newLaunchDate.toDateString() !== oldLaunchDateString;
 
   return launchDateCleared || launchDateUpdated;
 };
@@ -27,7 +27,7 @@ interface GetShouldUpdateNameArgs {
 export const getShouldUpdateName = ({
   oldName,
   newName,
-}: GetShouldUpdateNameArgs) => newName && newName !== oldName;
+}: GetShouldUpdateNameArgs) => !!newName && newName !== oldName;
 
 interface HandleUpdateCollectionArgs {
   nftCollection: Loaded<NFTCollection, never>;
