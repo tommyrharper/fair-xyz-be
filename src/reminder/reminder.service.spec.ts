@@ -76,8 +76,7 @@ describe('ReminderService', () => {
   });
 
   afterEach(async () => {
-    await migrator.down();
-    await migrator.down();
+    await migrator.down({ to: 'Migration20220509215402' });
     await orm.close(true);
   });
 
