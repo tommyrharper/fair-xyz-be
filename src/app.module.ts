@@ -7,14 +7,15 @@ import { AppService } from './app.service';
 import { ReminderModule } from './reminder/reminder.module';
 import { NFTCollectionModule } from './NFTCollection/nftcollection.module';
 
+export const GRAPHQL_CONFIG = {
+  debug: true,
+  playground: true,
+  autoSchemaFile: true,
+  driver: ApolloDriver,
+};
 @Module({
   imports: [
-    GraphQLModule.forRoot({
-      debug: true,
-      playground: true,
-      autoSchemaFile: true,
-      driver: ApolloDriver,
-    }),
+    GraphQLModule.forRoot(GRAPHQL_CONFIG),
     MikroOrmModule.forRoot(),
     ReminderModule,
     NFTCollectionModule,
