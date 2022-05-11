@@ -90,6 +90,7 @@ Connection => Host name/address: localhost. Port => 5432. Password: postgres. Sa
 The db is here: Servers -> fair-xyz -> Databases -> postgres;
 Next I created a db using the GUI:
 - Right click Databases -> Create -> Database: fair-xyz -> Save.
+- Right click Databases -> Create -> Database: fair-xyz-test -> Save.
 
 ```
 npx nest g module student
