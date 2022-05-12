@@ -20,9 +20,6 @@ import {
 } from '../testing/utils';
 import { NFTCollectionService } from './nftcollection.service';
 import { addDays } from 'date-fns';
-// import waitForExpect from 'wait-for-expect';
-// await waitForExpect(() => {
-// });
 
 const NEW_COLLECTION_NAME = 'New name';
 
@@ -100,7 +97,7 @@ describe('NFTCollectionService', () => {
       const collection = await getCollectionByName(em, COLLECTION_NAME);
       await createTwoRemindersForCollection(em, collection);
 
-      await service.updateNFTCollection(collection.uuid, undefined, null, true);
+      await service.updateNFTCollection(collection.uuid, undefined, null);
 
       checkOldEmailJobsWereCancelled(removeEmailJobsSpy, collection.uuid);
 
@@ -121,7 +118,6 @@ describe('NFTCollectionService', () => {
           collection.uuid,
           NEW_COLLECTION_NAME,
           undefined,
-          true,
         );
 
         await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
@@ -146,7 +142,6 @@ describe('NFTCollectionService', () => {
           collection.uuid,
           undefined,
           newLaunchDate,
-          true,
         );
 
         await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
@@ -171,7 +166,6 @@ describe('NFTCollectionService', () => {
           collection.uuid,
           NEW_COLLECTION_NAME,
           newLaunchDate,
-          true,
         );
 
         await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({

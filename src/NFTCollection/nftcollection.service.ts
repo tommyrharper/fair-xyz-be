@@ -6,8 +6,6 @@ import { Reminder } from '../reminder/reminder.entity';
 import { NFTCollection } from './nftcollection.entity';
 import { getShouldUpdateCollection, handleUpdateCollection } from './utils';
 
-// TODO: see if waitForJobsToFinish can be removed
-
 @Injectable()
 export class NFTCollectionService {
   constructor(
@@ -21,7 +19,6 @@ export class NFTCollectionService {
     uuid: string,
     newName?: string,
     newLaunchDate?: Date | null,
-    waitForJobsToFinish = false,
   ): Promise<NFTCollection> {
     const { nftCollectionsRepository, remindersRepository } = this;
     const nftCollection = await this.nftCollectionsRepository.findOne({
@@ -43,14 +40,10 @@ export class NFTCollectionService {
         newLaunchDate,
       });
 
-      const jobs = handleUpdatingReminderJobs({
+      handleUpdatingReminderJobs({
         remindersRepository,
         nftCollection,
       });
-
-      if (waitForJobsToFinish) {
-        await Promise.all(await jobs);
-      }
     }
 
     return nftCollection;

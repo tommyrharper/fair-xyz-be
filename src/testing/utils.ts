@@ -20,6 +20,7 @@ import {
   TEST_EMAIL_TWO,
 } from '.';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+import waitForExpect from 'wait-for-expect';
 
 interface CheckAllEmailJobsForCollectionHaveBeenProperlyRescheduledArgs {
   removeEmailJobsSpy: jest.SpyInstance;
@@ -37,7 +38,9 @@ export const checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled =
   }: CheckAllEmailJobsForCollectionHaveBeenProperlyRescheduledArgs) => {
     checkOldEmailJobsWereCancelled(removeEmailJobsSpy, updatedCollection.uuid);
 
-    expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
+    await waitForExpect(() => {
+      expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
+    });
 
     const reminder1Jobs: Job[] = await addEmailJobsSpy.mock.results[0].value;
     const reminder2Jobs: Job[] = await addEmailJobsSpy.mock.results[1].value;
