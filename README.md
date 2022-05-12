@@ -19,13 +19,20 @@ Never forget your next NFT Collection launch again! Get emailed reminders just i
 ## Notes
 
 I have added some thoughts here on different decisions I made when building this system.
-### Object Relational Mapping
 
-I decided to use [MikroORM](https://mikro-orm.io/) for an ORM as they have a nice [integration with Nest.js](https://docs.nestjs.com/recipes/mikroorm) and a cool feature where the GraphQL schema can be inferred from the MikroORM Entitys, so you don't have to write it out explicitly.
+## Testing
 
-You can also see [details on the integration from MikroORM's docs here](https://mikro-orm.io/docs/usage-with-nestjs).
+I decided to create a test PostgreSQL database for testing purposes.
 
-[TypeORM](https://typeorm.io/) is much more popular, but I wanted to try out the alternative.
+I didn't add a test database for Redis just to save time, so the tests and the app use the same redis store.
+
+I wrote most of the tests as either unit tests for specific important functionality and integration tests at the level of the resolver.
+
+I didn't write any tests at the e2e level, which is something I would do if I was going to invest more time into this.
+
+I still managed to achieve `95%` test coverage across the application, and almost all the most important core functionality is well tested.
+
+![](2022-05-13-00-39-02.png)
 
 ### Queue System
 
@@ -40,6 +47,15 @@ I didn't add any failure protection for this scenario.
 For this reason I decided not to `bulkAdd` to update all reminders at once when updating a collection launch date or name.
 
 Instead the reminder jobs are chunked at the level of per email. This way if there was a failure, it would just be for a single user.
+
+### Object Relational Mapping
+
+I decided to use [MikroORM](https://mikro-orm.io/) for an ORM as they have a nice [integration with Nest.js](https://docs.nestjs.com/recipes/mikroorm) and a cool feature where the GraphQL schema can be inferred from the MikroORM Entitys, so you don't have to write it out explicitly.
+
+You can also see [details on the integration from MikroORM's docs here](https://mikro-orm.io/docs/usage-with-nestjs).
+
+[TypeORM](https://typeorm.io/) is much more popular, but I wanted to try out the alternative.
+
 ### Schema
 
 I decided to go for two simple entities:
@@ -56,20 +72,6 @@ Table of collections (NFTCollection):
 - launchDate: Date | null
 
 They both also have a `createdAt` and `updatedAt` date.
-
-## Testing
-
-I decided to create a test PostgreSQL database for testing purposes.
-
-I didn't add a test database for Redis just to save time, so the tests and the app use the same redis store.
-
-I wrote most of the tests as either unit tests for specific important functionality and integration tests at the level of the resolver.
-
-I didn't write any tests at the e2e level, which is something I would do if I was going to invest more time into this.
-
-I still managed to achieve `95%` test coverage across the application, and almost all the most important core functionality is well tested.
-
-![](2022-05-13-00-39-02.png)
 
 ## Installation and Quick Start
 
