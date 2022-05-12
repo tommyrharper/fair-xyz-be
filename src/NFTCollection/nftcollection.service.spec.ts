@@ -17,11 +17,12 @@ import {
 } from '../testing';
 import {
   createAndGetTestingModule,
-  getCollection,
+  getCollectionByName,
   setupTestDB,
   shutdownTestDB,
 } from '../testing/utils';
 import { NFTCollectionService } from './nftcollection.service';
+import { addDays } from 'date-fns';
 
 describe('NFTCollectionService', () => {
   let service: NFTCollectionService;
@@ -62,5 +63,21 @@ describe('NFTCollectionService', () => {
         expect(launchDate).toBeTruthy();
       }
     });
+  });
+
+  it('updateNFTCollection endpoint updates collection', async () => {
+    const collectionName = 'Beauty Embodied';
+    const collection = await getCollectionByName(em, collectionName);
+
+    const newDate = addDays(new Date(), 10);
+
+    const updatedCollection = await service.updateNFTCollection(
+      collection.uuid,
+      'New Name',
+      newDate,
+    );
+
+    expect(updatedCollection.name).toBe('New Name');
+    expect(new Date(updatedCollection.launchDate)).toEqual(newDate);
   });
 });

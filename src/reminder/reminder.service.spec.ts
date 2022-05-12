@@ -18,7 +18,7 @@ import {
 } from '../testing';
 import {
   createAndGetTestingModule,
-  getCollection,
+  getCollectionByName,
   setupTestDB,
   shutdownTestDB,
 } from '../testing/utils';
@@ -50,7 +50,7 @@ describe('ReminderService', () => {
   it('createReminder should create a reminder', async () => {
     const collectionName = 'Beauty Embodied';
 
-    const collection = await getCollection(em, collectionName);
+    const collection = await getCollectionByName(em, collectionName);
 
     expect(collection).toBeDefined();
 
@@ -65,7 +65,7 @@ describe('ReminderService', () => {
     const collectionName = 'Beauty Embodied';
     const addEmailsJobsSpy = jest.spyOn(emailQueue, 'addBulk');
 
-    const collection = await getCollection(em, collectionName);
+    const collection = await getCollectionByName(em, collectionName);
     const reminderCreatedTime = new Date().getTime();
 
     await service.createReminder(TEST_EMAIL, collection.uuid);

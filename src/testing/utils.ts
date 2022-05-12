@@ -9,7 +9,7 @@ import { Test } from '@nestjs/testing';
 import { INITIAL_MIGRATION, TESTING_MODULE_CONFIG, TEST_DB_CONFIG } from '.';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
 
-export const getCollection = async (
+export const getCollectionByName = async (
   em: EntityManager<IDatabaseDriver<Connection>>,
   collectionName: string,
 ) => {
