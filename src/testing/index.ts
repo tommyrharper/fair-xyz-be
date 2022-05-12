@@ -1,6 +1,18 @@
 import * as path from 'path';
-import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
+import { MikroOrmModule, MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
+import { GraphQLModule } from '@nestjs/graphql';
+import { GRAPHQL_CONFIG } from '../app.module';
+import { AppService } from '../app.service';
+import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+import { NFTCollectionModule } from '../NFTCollection/nftcollection.module';
+import { NFTCollectionResolver } from '../NFTCollection/nftcollection.resolver';
+import { NFTCollectionService } from '../NFTCollection/nftcollection.service';
+import { Reminder } from '../reminder/reminder.entity';
+import { ReminderModule } from '../reminder/reminder.module';
+import { ReminderResolver } from '../reminder/reminder.resolver';
+import { ReminderService } from '../reminder/reminder.service';
+import { ModuleMetadata } from '@nestjs/common';
 
 export const TEST_EMAIL = 'example@gmail.com';
 export const ONE_DAY_IN_MILLISECONDS = 86_400_000;
@@ -24,4 +36,21 @@ export const TEST_DB_CONFIG: MikroOrmModuleSyncOptions = {
     path: path.join(__dirname, '../migrations'),
     glob: '!(*.d).{js,ts}',
   },
+};
+
+export const TESTING_MODULE_CONFIG: ModuleMetadata = {
+  imports: [
+    GraphQLModule.forRoot(GRAPHQL_CONFIG),
+    MikroOrmModule.forRoot(TEST_DB_CONFIG),
+    MikroOrmModule.forFeature([Reminder, NFTCollection]),
+    ReminderModule,
+    NFTCollectionModule,
+  ],
+  providers: [
+    AppService,
+    ReminderService,
+    ReminderResolver,
+    NFTCollectionService,
+    NFTCollectionResolver,
+  ],
 };

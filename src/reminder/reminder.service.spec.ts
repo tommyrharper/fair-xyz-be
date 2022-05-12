@@ -1,16 +1,7 @@
 import { emailQueue } from './../queues/email.queue';
-import { MikroOrmModule, MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
-import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
-import { AppService } from '../app.service';
-import { NFTCollectionModule } from '../NFTCollection/nftcollection.module';
-import { Reminder } from './reminder.entity';
-import { ReminderModule } from './reminder.module';
 import { ReminderService } from './reminder.service';
-import { ReminderResolver } from './reminder.resolver';
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
-import * as path from 'path';
 import {
   Connection,
   EntityManager,
@@ -18,32 +9,17 @@ import {
   IMigrator,
   MikroORM,
 } from '@mikro-orm/core';
-import { GRAPHQL_CONFIG } from '../app.module';
 import { Job } from 'bull';
-
-const TEST_EMAIL = 'example@gmail.com';
-const ONE_DAY_IN_MILLISECONDS = 86_400_000;
-const ONE_HOUR_IN_MILLISECONDS = 3_600_000;
-const HALF_HOUR_IN_MILLISECONDS = 1_800_000;
-const QUARTER_OF_A_SECOND = 250;
-
-const INITIAL_MIGRATION = 'Migration20220509215402';
-
-const TEST_DB_CONFIG: MikroOrmModuleSyncOptions = {
-  type: 'postgresql',
-  host: 'localhost',
-  port: 5432,
-  user: 'postgres',
-  password: 'postgres',
-  dbName: 'fair-xyz-test',
-  entities: ['dist/**/*.entity.js'],
-  entitiesTs: ['src/**/*.entity.ts'],
-  metadataProvider: TsMorphMetadataProvider,
-  migrations: {
-    path: path.join(__dirname, '../migrations'),
-    glob: '!(*.d).{js,ts}',
-  },
-};
+import {
+  HALF_HOUR_IN_MILLISECONDS,
+  INITIAL_MIGRATION,
+  ONE_DAY_IN_MILLISECONDS,
+  ONE_HOUR_IN_MILLISECONDS,
+  QUARTER_OF_A_SECOND,
+  TESTING_MODULE_CONFIG,
+  TEST_DB_CONFIG,
+  TEST_EMAIL,
+} from '../testing';
 
 describe('ReminderService', () => {
   let service: ReminderService;
@@ -52,16 +28,9 @@ describe('ReminderService', () => {
   let em: EntityManager<IDatabaseDriver<Connection>>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        GraphQLModule.forRoot(GRAPHQL_CONFIG),
-        MikroOrmModule.forRoot(TEST_DB_CONFIG),
-        MikroOrmModule.forFeature([Reminder, NFTCollection]),
-        ReminderModule,
-        NFTCollectionModule,
-      ],
-      providers: [AppService, ReminderService, ReminderResolver],
-    }).compile();
+    const module: TestingModule = await Test.createTestingModule(
+      TESTING_MODULE_CONFIG,
+    ).compile();
 
     orm = await MikroORM.init(TEST_DB_CONFIG);
     em = orm.em;
