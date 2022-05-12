@@ -11,6 +11,7 @@ import { Job } from 'bull';
 import { COLLECTION_NAME, TEST_EMAIL, TEST_EMAIL_TWO } from '../testing';
 import {
   checkJobsHaveBeenProperlyScheduled,
+  checkOldEmailJobsWereCancelled,
   createAndGetTestingModule,
   createTwoRemindersForCollection,
   getCollectionById,
@@ -109,8 +110,7 @@ describe('NFTCollectionService', () => {
         true,
       );
 
-      expect(removeEmailJobsSpy).toHaveBeenCalledTimes(1);
-      expect(removeEmailJobsSpy).toHaveBeenCalledWith(`${collection.uuid}*`);
+      checkOldEmailJobsWereCancelled(removeEmailJobsSpy, collection.uuid);
 
       expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
 
@@ -139,8 +139,7 @@ describe('NFTCollectionService', () => {
 
       await service.updateNFTCollection(collection.uuid, undefined, null, true);
 
-      expect(removeEmailJobsSpy).toHaveBeenCalledTimes(1);
-      expect(removeEmailJobsSpy).toHaveBeenCalledWith(`${collection.uuid}*`);
+      checkOldEmailJobsWereCancelled(removeEmailJobsSpy, collection.uuid);
 
       expect(addEmailJobsSpy).not.toHaveBeenCalled();
     });
@@ -163,8 +162,7 @@ describe('NFTCollectionService', () => {
         true,
       );
 
-      expect(removeEmailJobsSpy).toHaveBeenCalledTimes(1);
-      expect(removeEmailJobsSpy).toHaveBeenCalledWith(`${collection.uuid}*`);
+      checkOldEmailJobsWereCancelled(removeEmailJobsSpy, collection.uuid);
 
       expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
 

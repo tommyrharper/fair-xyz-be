@@ -21,6 +21,14 @@ import {
 } from '.';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
 
+export const checkOldEmailJobsWereCancelled = async (
+  removeEmailJobsSpy: jest.SpyInstance,
+  collectionId: string,
+) => {
+  expect(removeEmailJobsSpy).toHaveBeenCalledTimes(1);
+  expect(removeEmailJobsSpy).toHaveBeenCalledWith(`${collectionId}*`);
+};
+
 export const createTwoRemindersForCollection = async (
   em: EntityManager<IDatabaseDriver<Connection>>,
   collection: NFTCollection,
