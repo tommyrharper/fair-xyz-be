@@ -28,14 +28,13 @@ describe('ReminderService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await createAndGetTestingModule();
+    service = module.get<ReminderService>(ReminderService);
 
     orm = await MikroORM.init(TEST_DB_CONFIG);
     em = orm.em;
 
     migrator = orm.getMigrator();
     await migrator.up();
-
-    service = module.get<ReminderService>(ReminderService);
   });
 
   afterEach(async () => {
