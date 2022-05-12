@@ -6,14 +6,17 @@ export interface ReminderEmailData {
   text: string;
 }
 
+export const FROM_EMAIL = '"Tom 👻" <tom@fair.xyz>';
+export const REMINDER_EMAIL_SUBJECT = 'NFT Launch Reminder';
+
 export const sendReminderEmailProcess = async ({
   data: { email, text },
 }: Job<ReminderEmailData>) => {
   console.log('sending email', email, text);
-  sendEmail({
-    from: '"Tom 👻" <tom@fair.xyz>',
+  return sendEmail({
+    from: FROM_EMAIL,
     to: email,
-    subject: 'NFT Launch Reminder',
+    subject: REMINDER_EMAIL_SUBJECT,
     text,
     html: `<b>${text}</b>`,
   });
