@@ -46,4 +46,21 @@ describe('NFTCollectionService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('getNFTCollections returns all collections', async () => {
+    const nftCollections = await service.getNFTCollections();
+
+    expect(nftCollections.length).toBe(6);
+
+    nftCollections.forEach((collection) => {
+      const { name, launchDate, uuid, createdAt, updatedAt } = collection;
+      expect(uuid).toBeTruthy();
+      expect(name).toBeTruthy();
+      expect(createdAt).toBeTruthy();
+      expect(updatedAt).toBeTruthy();
+      if (launchDate !== null) {
+        expect(launchDate).toBeTruthy();
+      }
+    });
+  });
 });
