@@ -83,12 +83,13 @@ describe('NFTCollectionService', () => {
     expect(updatedCollection.name).toBe(NEW_COLLECTION_NAME);
     expect(new Date(updatedCollection.launchDate)).toEqual(newDate);
 
+    em.clear();
+
     const updatedCollectionFromDB = await getCollectionById(
       em,
       collection.uuid,
     );
 
     expect(updatedCollectionFromDB.name).toBe(NEW_COLLECTION_NAME);
-    expect(new Date(updatedCollectionFromDB.launchDate)).toEqual(newDate);
   });
 });
