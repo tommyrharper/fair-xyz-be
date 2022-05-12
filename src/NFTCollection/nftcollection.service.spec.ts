@@ -7,11 +7,9 @@ import {
   IMigrator,
   MikroORM,
 } from '@mikro-orm/core';
-import { Job } from 'bull';
-import { COLLECTION_NAME, TEST_EMAIL, TEST_EMAIL_TWO } from '../testing';
+import { COLLECTION_NAME } from '../testing';
 import {
   checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled,
-  checkJobsHaveBeenProperlyScheduled,
   checkOldEmailJobsWereCancelled,
   createAndGetTestingModule,
   createTwoRemindersForCollection,
@@ -22,7 +20,6 @@ import {
 } from '../testing/utils';
 import { NFTCollectionService } from './nftcollection.service';
 import { addDays } from 'date-fns';
-import { Reminder } from '../reminder/reminder.entity';
 // import waitForExpect from 'wait-for-expect';
 // await waitForExpect(() => {
 // });
@@ -96,30 +93,6 @@ describe('NFTCollectionService', () => {
       expect(updatedCollectionFromDB.name).toBe(NEW_COLLECTION_NAME);
     });
 
-    it('changing collection name updates email reminder jobs', async () => {
-      const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
-      const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
-
-      const collection = await getCollectionByName(em, COLLECTION_NAME);
-      await createTwoRemindersForCollection(em, collection);
-
-      const reminderUpdatedTime = new Date();
-
-      const updatedCollection = await service.updateNFTCollection(
-        collection.uuid,
-        NEW_COLLECTION_NAME,
-        undefined,
-        true,
-      );
-
-      await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
-        removeEmailJobsSpy,
-        addEmailJobsSpy,
-        updatedCollection,
-        reminderUpdatedTime,
-      });
-    });
-
     it('changing launchDate to null cancels email reminders', async () => {
       const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
       const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
@@ -134,53 +107,79 @@ describe('NFTCollectionService', () => {
       expect(addEmailJobsSpy).not.toHaveBeenCalled();
     });
 
-    it('changing launchDate updates email reminder jobs', async () => {
-      const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
-      const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
+    describe('correctly updates email reminder jobs', () => {
+      it('changing name', async () => {
+        const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
+        const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
 
-      const collection = await getCollectionByName(em, COLLECTION_NAME);
-      await createTwoRemindersForCollection(em, collection);
+        const collection = await getCollectionByName(em, COLLECTION_NAME);
+        await createTwoRemindersForCollection(em, collection);
 
-      const reminderUpdatedTime = new Date();
-      const newLaunchDate = addDays(reminderUpdatedTime, 15);
+        const reminderUpdatedTime = new Date();
 
-      const updatedCollection = await service.updateNFTCollection(
-        collection.uuid,
-        undefined,
-        newLaunchDate,
-        true,
-      );
+        const updatedCollection = await service.updateNFTCollection(
+          collection.uuid,
+          NEW_COLLECTION_NAME,
+          undefined,
+          true,
+        );
 
-      await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
-        removeEmailJobsSpy,
-        addEmailJobsSpy,
-        updatedCollection,
-        reminderUpdatedTime,
+        await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
+          removeEmailJobsSpy,
+          addEmailJobsSpy,
+          updatedCollection,
+          reminderUpdatedTime,
+        });
       });
-    });
 
-    it('changing launchDate and name updates email reminder jobs', async () => {
-      const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
-      const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
+      it('changing launchDate', async () => {
+        const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
+        const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
 
-      const collection = await getCollectionByName(em, COLLECTION_NAME);
-      await createTwoRemindersForCollection(em, collection);
+        const collection = await getCollectionByName(em, COLLECTION_NAME);
+        await createTwoRemindersForCollection(em, collection);
 
-      const reminderUpdatedTime = new Date();
-      const newLaunchDate = addDays(reminderUpdatedTime, 15);
+        const reminderUpdatedTime = new Date();
+        const newLaunchDate = addDays(reminderUpdatedTime, 15);
 
-      const updatedCollection = await service.updateNFTCollection(
-        collection.uuid,
-        NEW_COLLECTION_NAME,
-        newLaunchDate,
-        true,
-      );
+        const updatedCollection = await service.updateNFTCollection(
+          collection.uuid,
+          undefined,
+          newLaunchDate,
+          true,
+        );
 
-      await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
-        removeEmailJobsSpy,
-        addEmailJobsSpy,
-        updatedCollection,
-        reminderUpdatedTime,
+        await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
+          removeEmailJobsSpy,
+          addEmailJobsSpy,
+          updatedCollection,
+          reminderUpdatedTime,
+        });
+      });
+
+      it('changing launchDate and name', async () => {
+        const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
+        const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
+
+        const collection = await getCollectionByName(em, COLLECTION_NAME);
+        await createTwoRemindersForCollection(em, collection);
+
+        const reminderUpdatedTime = new Date();
+        const newLaunchDate = addDays(reminderUpdatedTime, 15);
+
+        const updatedCollection = await service.updateNFTCollection(
+          collection.uuid,
+          NEW_COLLECTION_NAME,
+          newLaunchDate,
+          true,
+        );
+
+        await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
+          removeEmailJobsSpy,
+          addEmailJobsSpy,
+          updatedCollection,
+          reminderUpdatedTime,
+        });
       });
     });
   });
