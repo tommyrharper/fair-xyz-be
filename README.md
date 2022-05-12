@@ -5,32 +5,43 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+  <p align="center">A Nest.js application for sending NFT Collection launch reminder emails.</p>
     <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_95.svg#9" alt="Coverage" /></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Based on the [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+Never forget your next NFT Collection launch again! Get emailed reminders just in time 😀  🎉  🎊  🍻  🎁
 
+## Installation and Quick Start
+
+1. Install all the dependencies:
 ```bash
 $ npm install
 ```
+2. Boot docker instances for databases:
+```bash
+docker run --name fair-xyz --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+docker run --name redis-fair-xyz -d -p 6379:6379 redis:6.0
+docker container ls # to check the dbs have been setup
+```
+
+3. Create two databases within `fair-xy`:
+     - `fair-xyz`
+     - `fair-xyz-test` (this is a test db, it is only needed for running the tests)
+
+4. Now you have the databases up, you can run the migrations
+```
+npx mikro-orm migration:up
+```
+5. Now you are ready to go!
+```bash
+npm run start:dev
+```
+
 
 ## Running the app
 
@@ -58,28 +69,8 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Steps I used to set this up
+## Setting up the DBs
 
-- nodejs version `v16.14.0`
-
-```
-npm i -g @nestjs/cli
-nest new project-name
-npm i @nestjs/graphql @nestjs/apollo graphql apollo-server-express
-npm i -s @mikro-orm/core @mikro-orm/nestjs @mikro-orm/postgresql
-npm i -D ts-morph
-npm i @mikro-orm/reflection
-docker run --name fair-xyz --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
-docker run --name redis-fair-xyz -d -p 6379:6379 redis:6.0
-docker container ls # to check the db has been setup
-npm i @mikro-orm/cli
-npm i @mikro-orm/migrations
-npm i nodemailer
-npm install --save @types/nodemailer
-npm i bull
-npm install --save -D @types/bull
-npm i date-fns
-```
 
 Then I opened up pgAdmin. Created a new server:
 ```
@@ -89,32 +80,9 @@ Connection => Host name/address: localhost. Port => 5432. Password: postgres. Sa
 
 The db is here: Servers -> fair-xyz -> Databases -> postgres;
 Next I created a db using the GUI:
-- Right click Databases -> Create -> Database: fair-xyz -> Save.
-- Right click Databases -> Create -> Database: fair-xyz-test -> Save.
+   - Right click Databases -> Create -> Database: fair-xyz -> Save.
+   - Right click Databases -> Create -> Database: fair-xyz-test -> Save.
 
-```
-npx nest g module student
-npx nest g service student
-```
-
-- Then I setup the entities, modules and resolvers. Now it is running you can access the playground: `http://localhost:3000/graphql`
-
-Now I can query:
-```graphql
-query {
-  getStuff
-}
-```
-
-- Next I created migrations:
-```
-npx mikro-orm migration:create
-
-```
-- I added the following code to the start of the first migration to support our primary key creation:
-```
-this.addSql('create extension "uuid-ossp";');
-```
 
 - Then I ran the migrations:
 ```
@@ -124,11 +92,20 @@ npx mikro-orm migration:up
 - Should now be able to see in pgAdmin: fair-xyz => Databases => fair-xyz => Schemas => Tables => student => Columns (6)
 - Now you can boot the server and execute a mutation
 
-```
-npm run start:dev
+## Queries
+
+```graphql
+query {
+  getNFTCollections {
+    uuid
+    name
+    launchDate
+  }
+}
 ```
 
-- Mutations:
+## Mutations:
+
 ```graphql
 mutation {
   updateNFTCollection(uuid: "112f7f68-a519-445d-beaf-52e21a2d5f6d", launchDate: "2022-05-14 22:11:44+00") {
@@ -153,18 +130,7 @@ mutation {
 }
 ```
 
-- Queries:
-```graphql
-query {
-  getNFTCollections {
-    uuid
-    name
-    launchDate
-  }
-}
-```
-
-## Quick Start
+## Quick Start - If already installed and setup before
 
 ```
 docker start fair-xyz
@@ -172,7 +138,7 @@ docker start redis-fair-xyz
 npm run start:dev
 ```
 
-## Reminder functionality
+## Tables data structure
 
 Table of emails:
 - id: ID
@@ -185,16 +151,6 @@ Table of collections:
 - name: String
 - launchDate: Date | null
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Author - [Tom Harper](https://github.com/tommyrharper)
