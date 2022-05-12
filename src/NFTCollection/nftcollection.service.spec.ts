@@ -98,6 +98,8 @@ describe('NFTCollectionService', () => {
     expect(updatedCollectionFromDB.name).toBe(NEW_COLLECTION_NAME);
   });
 
+  // TODO: check old jobs were deleted
+
   it('updateNFTCollection updates email reminder jobs', async () => {
     const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
 

@@ -6,8 +6,65 @@ import {
   IMigrator,
 } from '@mikro-orm/core';
 import { Test } from '@nestjs/testing';
-import { INITIAL_MIGRATION, TESTING_MODULE_CONFIG, TEST_DB_CONFIG } from '.';
+import { Job } from 'bull';
+import {
+  HALF_HOUR_IN_MILLISECONDS,
+  INITIAL_MIGRATION,
+  ONE_DAY_IN_MILLISECONDS,
+  ONE_HOUR_IN_MILLISECONDS,
+  QUARTER_OF_A_SECOND,
+  TESTING_MODULE_CONFIG,
+  TEST_DB_CONFIG,
+} from '.';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+
+// TODO: Refactor to use getEmailContentFunction ???
+
+interface CheckJobsHaveBeenProperlyScheduledArgs {
+  jobs: Job[];
+  email: string;
+  collection: NFTCollection;
+  reminderCreatedTime: Date;
+}
+
+export const checkJobsHaveBeenProperlyScheduled = ({
+  jobs,
+  email,
+  collection,
+  reminderCreatedTime,
+}: CheckJobsHaveBeenProperlyScheduledArgs) => {
+  const { name, launchDate, uuid } = collection;
+
+  expect(jobs.length).toBe(4);
+
+  const launchTime = new Date(launchDate).getTime();
+  const expectedDelayLength = [
+    launchTime - reminderCreatedTime.getTime() - ONE_DAY_IN_MILLISECONDS,
+    launchTime - reminderCreatedTime.getTime() - ONE_HOUR_IN_MILLISECONDS,
+    launchTime - reminderCreatedTime.getTime() - HALF_HOUR_IN_MILLISECONDS,
+    launchTime - reminderCreatedTime.getTime() - 0,
+  ];
+
+  const expectedEmailContent = [
+    `REMINDER - THE COLLECTION ${name.toUpperCase()} LAUNCHES IN 1 DAY`,
+    `REMINDER - THE COLLECTION ${name.toUpperCase()} LAUNCHES IN 1 HOUR`,
+    `REMINDER - THE COLLECTION ${name.toUpperCase()} LAUNCHES IN 30 MINS`,
+    `${name.toUpperCase()} IS LAUNCHING NOW!`,
+  ];
+
+  jobs.forEach((job, i) => {
+    expect(job.id).toBe(`${uuid}-${email}-${i}`);
+    expect(job.data.email).toBe(email);
+    expect(job.data.text).toBe(expectedEmailContent[i]);
+
+    const timingError = Math.abs(expectedDelayLength[i] - job.opts.delay);
+
+    // This tests that each email with be sent within 250ms of the expected time frame
+    expect(timingError).toBeLessThan(QUARTER_OF_A_SECOND);
+
+    job.remove();
+  });
+};
 
 export const getCollectionByName = async (
   em: EntityManager<IDatabaseDriver<Connection>>,
