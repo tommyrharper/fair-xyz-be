@@ -91,7 +91,7 @@ export const handleUpdatingReminderJobs = async ({
 
   if (nftCollection.launchDate === null) return;
 
-  scheduleNewRemindersForCollection({
+  return scheduleNewRemindersForCollection({
     remindersRepository,
     nftCollection,
   });

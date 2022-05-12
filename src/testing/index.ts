@@ -16,6 +16,7 @@ import { ModuleMetadata } from '@nestjs/common';
 
 export const COLLECTION_NAME = 'Beauty Embodied';
 export const TEST_EMAIL = 'example@gmail.com';
+export const TEST_EMAIL_TWO = 'test@test.com';
 export const ONE_DAY_IN_MILLISECONDS = 86_400_000;
 export const ONE_HOUR_IN_MILLISECONDS = 3_600_000;
 export const HALF_HOUR_IN_MILLISECONDS = 1_800_000;

@@ -7,7 +7,7 @@ import {
   IMigrator,
   MikroORM,
 } from '@mikro-orm/core';
-import { Job } from 'bull';
+import { Job, JobOptions } from 'bull';
 import {
   COLLECTION_NAME,
   HALF_HOUR_IN_MILLISECONDS,
@@ -15,6 +15,7 @@ import {
   ONE_HOUR_IN_MILLISECONDS,
   QUARTER_OF_A_SECOND,
   TEST_EMAIL,
+  TEST_EMAIL_TWO,
 } from '../testing';
 import {
   createAndGetTestingModule,
@@ -25,6 +26,8 @@ import {
 } from '../testing/utils';
 import { NFTCollectionService } from './nftcollection.service';
 import { addDays } from 'date-fns';
+import { Reminder } from '../reminder/reminder.entity';
+// import waitForExpect from 'wait-for-expect';
 
 const NEW_COLLECTION_NAME = 'New name';
 
@@ -93,7 +96,67 @@ describe('NFTCollectionService', () => {
     expect(updatedCollectionFromDB.name).toBe(NEW_COLLECTION_NAME);
   });
 
-  // it('updateNFTCollection updates reminders', async () => {
-  //   const collection = await getCollectionByName(em, COLLECTION_NAME);
-  // });
+  it('updateNFTCollection updates email reminder jobs', async () => {
+    const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
+    // addEmailJobsSpy.mockImplementation((jobs: { name?: string; data: any; opts?: Omit<JobOptions, "repeat">; }[]) => {
+    //   return addEmailJobsSpy(jobs)
+    //   return Promise.resolve([{}] as Job<any>[]);
+    // });
+
+    // (jobs: { name?: string; data: any; opts?: Omit<JobOptions, "repeat">; }[]) => Promise<Job<any>[]>
+
+    const collection = await getCollectionByName(em, COLLECTION_NAME);
+
+    const reminder1 = new Reminder();
+    reminder1.email = TEST_EMAIL;
+    reminder1.collection = collection;
+
+    const reminder2 = new Reminder();
+    reminder2.email = TEST_EMAIL_TWO;
+    reminder2.collection = collection;
+
+    await em.persistAndFlush([reminder1, reminder2]);
+
+    const reminderUpdatedTime = new Date().getTime();
+    await service.updateNFTCollection(collection.uuid, NEW_COLLECTION_NAME);
+    // await waitForExpect(() => {
+    // });
+    expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
+
+    // const reminder1Jobs: Job[] = await addEmailJobsSpy.mock.results[0].value;
+    // const reminder2Jobs: Job[] = await addEmailJobsSpy.mock.results[1].value;
+    // const jobsMatrix = [reminder1Jobs, reminder2Jobs];
+
+    // jobsMatrix.forEach((jobs) => {
+    //   expect(jobs.length).toBe(4);
+
+    //   const expectedEmailContent = [
+    //     'REMINDER - THE COLLECTION NEW NAME LAUNCHES IN 1 DAY',
+    //     'REMINDER - THE COLLECTION NEW NAME LAUNCHES IN 1 HOUR',
+    //     'REMINDER - THE COLLECTION NEW NAME LAUNCHES IN 30 MINS',
+    //     'NEW NAME IS LAUNCHING NOW!',
+    //   ];
+
+    //   const launchTime = new Date(collection.launchDate).getTime();
+    //   const expectedDelayLength = [
+    //     launchTime - reminderUpdatedTime - ONE_DAY_IN_MILLISECONDS,
+    //     launchTime - reminderUpdatedTime - ONE_HOUR_IN_MILLISECONDS,
+    //     launchTime - reminderUpdatedTime - HALF_HOUR_IN_MILLISECONDS,
+    //     launchTime - reminderUpdatedTime - 0,
+    //   ];
+
+    //   jobs.forEach((job, i) => {
+    //     expect(job.id).toBe(`${collection.uuid}-${TEST_EMAIL}-${i}`);
+    //     expect(job.data.email).toBe(TEST_EMAIL);
+    //     expect(job.data.text).toBe(expectedEmailContent[i]);
+
+    //     const timingError = Math.abs(expectedDelayLength[i] - job.opts.delay);
+
+    //     // This tests that each email with be sent within 250ms of the expected time frame
+    //     expect(timingError).toBeLessThan(QUARTER_OF_A_SECOND);
+
+    //     job.remove();
+    //   });
+    // });
+  });
 });
