@@ -12,6 +12,7 @@ import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import * as path from 'path';
 import {
   Connection,
+  EntityManager,
   IDatabaseDriver,
   IMigrator,
   MikroORM,
@@ -40,6 +41,7 @@ describe('ReminderService', () => {
   let service: ReminderService;
   let migrator: IMigrator;
   let orm: MikroORM<IDatabaseDriver<Connection>>;
+  let em: EntityManager<IDatabaseDriver<Connection>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -54,6 +56,7 @@ describe('ReminderService', () => {
     }).compile();
 
     orm = await MikroORM.init(TEST_DB_CONFIG);
+    em = orm.em;
 
     migrator = orm.getMigrator();
     await migrator.up();
@@ -69,11 +72,18 @@ describe('ReminderService', () => {
     expect(service).toBeDefined();
   });
 
-  // it('should create a reminder', async () => {
-  //   const reminder = await service.createReminder(
-  //     'test@gmail.com',
-  //     '6c4f4eb0-7bdd-4461-b845-d4d9ca9e7201',
-  //   );
-  //   expect(reminder).toBeDefined();
-  // });
+  it('should create a reminder', async () => {
+    const collection = await em.findOne(NFTCollection, {
+      name: 'Beauty Embodied',
+    });
+
+    expect(collection).toBeDefined();
+
+    const reminder = await service.createReminder(
+      'test@gmail.com',
+      collection.uuid,
+    );
+
+    expect(reminder).toBeDefined();
+  });
 });
