@@ -161,5 +161,53 @@ describe('NFTCollectionService', () => {
 
       expect(addEmailJobsSpy).not.toHaveBeenCalled();
     });
+
+    // TODO: extract add reminders logic -> move into beforeEach??? for describe block
+
+    it('changing launchDate updates email reminder jobs', async () => {
+      const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
+      const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
+
+      const collection = await getCollectionByName(em, COLLECTION_NAME);
+
+      const reminder1 = new Reminder();
+      reminder1.email = TEST_EMAIL;
+      reminder1.collection = collection;
+
+      const reminder2 = new Reminder();
+      reminder2.email = TEST_EMAIL_TWO;
+      reminder2.collection = collection;
+
+      await em.persistAndFlush([reminder1, reminder2]);
+
+      const reminderUpdatedTime = new Date();
+      const newLaunchDate = addDays(reminderUpdatedTime, 15);
+      const updatedCollection = await service.updateNFTCollection(
+        collection.uuid,
+        undefined,
+        newLaunchDate,
+        true,
+      );
+
+      expect(removeEmailJobsSpy).toHaveBeenCalledTimes(1);
+      expect(removeEmailJobsSpy).toHaveBeenCalledWith(`${collection.uuid}*`);
+
+      expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
+
+      const reminder1Jobs: Job[] = await addEmailJobsSpy.mock.results[0].value;
+      const reminder2Jobs: Job[] = await addEmailJobsSpy.mock.results[1].value;
+      const jobsMatrix = [reminder1Jobs, reminder2Jobs];
+
+      const expectedEmails = [TEST_EMAIL, TEST_EMAIL_TWO];
+
+      jobsMatrix.forEach((jobs, j) => {
+        checkJobsHaveBeenProperlyScheduled({
+          jobs,
+          email: expectedEmails[j],
+          collection: updatedCollection,
+          reminderCreatedTime: reminderUpdatedTime,
+        });
+      });
+    });
   });
 });
