@@ -19,6 +19,8 @@ import {
 } from '@mikro-orm/core';
 import { GRAPHQL_CONFIG } from '../app.module';
 
+const TEST_EMAIL = 'example@gmail.com';
+
 const INITIAL_MIGRATION = 'Migration20220509215402';
 
 const TEST_DB_CONFIG: MikroOrmModuleSyncOptions = {
@@ -73,17 +75,18 @@ describe('ReminderService', () => {
   });
 
   it('should create a reminder', async () => {
+    const collectionName = 'Beauty Embodied';
+
     const collection = await em.findOne(NFTCollection, {
-      name: 'Beauty Embodied',
+      name: collectionName,
     });
 
     expect(collection).toBeDefined();
 
-    const reminder = await service.createReminder(
-      'test@gmail.com',
-      collection.uuid,
-    );
+    const reminder = await service.createReminder(TEST_EMAIL, collection.uuid);
 
-    expect(reminder).toBeDefined();
+    expect(reminder.collection.uuid).toBe(collection.uuid);
+    expect(reminder.collection.name).toBe(collectionName);
+    expect(reminder.email).toBe(TEST_EMAIL);
   });
 });
