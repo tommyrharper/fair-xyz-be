@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { ReminderService } from './reminder.service';
 import { ReminderType } from './reminder.type';
 

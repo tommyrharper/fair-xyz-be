@@ -54,7 +54,7 @@ export const sendEmail = async ({
   html,
 }: SendEmailArgs) => {
   // Using a test account for the purposes of this exercise
-  // One thing to note if testing this is this testing service frequently goes down
+  // One thing to note if testing this testing service frequently goes down
   // For the current status see: https://www.saashub.com/ethereal-email-status
   const testAccount = await nodemailer.createTestAccount();
 
