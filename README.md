@@ -120,7 +120,7 @@ mutation {
 mutation {
   createReminder(email: "example@gmail.com", collection: "f8f454c9-531b-4984-971d-a432a5991cc9") {
     uuid
-		email
+    email
     collection {
       uuid
       name
