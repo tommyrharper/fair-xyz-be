@@ -15,11 +15,10 @@ import {
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
   QUARTER_OF_A_SECOND,
-  TESTING_MODULE_CONFIG,
   TEST_DB_CONFIG,
   TEST_EMAIL,
 } from '../testing';
-import { getCollection } from '../testing/utils';
+import { createAndGetTestingModule, getCollection } from '../testing/utils';
 
 describe('ReminderService', () => {
   let service: ReminderService;
@@ -28,15 +27,14 @@ describe('ReminderService', () => {
   let em: EntityManager<IDatabaseDriver<Connection>>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule(
-      TESTING_MODULE_CONFIG,
-    ).compile();
+    const module: TestingModule = await createAndGetTestingModule();
 
     orm = await MikroORM.init(TEST_DB_CONFIG);
     em = orm.em;
 
     migrator = orm.getMigrator();
     await migrator.up();
+
     service = module.get<ReminderService>(ReminderService);
   });
 
