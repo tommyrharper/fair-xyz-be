@@ -10,6 +10,7 @@ import {
 import { Job } from 'bull';
 import { COLLECTION_NAME, TEST_EMAIL, TEST_EMAIL_TWO } from '../testing';
 import {
+  checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled,
   checkJobsHaveBeenProperlyScheduled,
   checkOldEmailJobsWereCancelled,
   createAndGetTestingModule,
@@ -110,23 +111,11 @@ describe('NFTCollectionService', () => {
         true,
       );
 
-      checkOldEmailJobsWereCancelled(removeEmailJobsSpy, collection.uuid);
-
-      expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
-
-      const reminder1Jobs: Job[] = await addEmailJobsSpy.mock.results[0].value;
-      const reminder2Jobs: Job[] = await addEmailJobsSpy.mock.results[1].value;
-      const jobsMatrix = [reminder1Jobs, reminder2Jobs];
-
-      const expectedEmails = [TEST_EMAIL, TEST_EMAIL_TWO];
-
-      jobsMatrix.forEach((jobs, j) => {
-        checkJobsHaveBeenProperlyScheduled({
-          jobs,
-          email: expectedEmails[j],
-          collection: updatedCollection,
-          reminderCreatedTime: reminderUpdatedTime,
-        });
+      await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
+        removeEmailJobsSpy,
+        addEmailJobsSpy,
+        updatedCollection,
+        reminderUpdatedTime,
       });
     });
 
@@ -144,8 +133,6 @@ describe('NFTCollectionService', () => {
       expect(addEmailJobsSpy).not.toHaveBeenCalled();
     });
 
-    // TODO: extract add reminders logic -> move into beforeEach??? for describe block
-
     it('changing launchDate updates email reminder jobs', async () => {
       const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
       const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
@@ -162,23 +149,11 @@ describe('NFTCollectionService', () => {
         true,
       );
 
-      checkOldEmailJobsWereCancelled(removeEmailJobsSpy, collection.uuid);
-
-      expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
-
-      const reminder1Jobs: Job[] = await addEmailJobsSpy.mock.results[0].value;
-      const reminder2Jobs: Job[] = await addEmailJobsSpy.mock.results[1].value;
-      const jobsMatrix = [reminder1Jobs, reminder2Jobs];
-
-      const expectedEmails = [TEST_EMAIL, TEST_EMAIL_TWO];
-
-      jobsMatrix.forEach((jobs, j) => {
-        checkJobsHaveBeenProperlyScheduled({
-          jobs,
-          email: expectedEmails[j],
-          collection: updatedCollection,
-          reminderCreatedTime: reminderUpdatedTime,
-        });
+      await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
+        removeEmailJobsSpy,
+        addEmailJobsSpy,
+        updatedCollection,
+        reminderUpdatedTime,
       });
     });
   });

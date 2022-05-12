@@ -21,6 +21,40 @@ import {
 } from '.';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
 
+interface CheckAllEmailJobsForCollectionHaveBeenProperlyRescheduledArgs {
+  removeEmailJobsSpy: jest.SpyInstance;
+  addEmailJobsSpy: jest.SpyInstance;
+  updatedCollection: NFTCollection;
+  reminderUpdatedTime: Date;
+}
+
+export const checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled =
+  async ({
+    removeEmailJobsSpy,
+    addEmailJobsSpy,
+    updatedCollection,
+    reminderUpdatedTime,
+  }: CheckAllEmailJobsForCollectionHaveBeenProperlyRescheduledArgs) => {
+    checkOldEmailJobsWereCancelled(removeEmailJobsSpy, updatedCollection.uuid);
+
+    expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);
+
+    const reminder1Jobs: Job[] = await addEmailJobsSpy.mock.results[0].value;
+    const reminder2Jobs: Job[] = await addEmailJobsSpy.mock.results[1].value;
+    const jobsMatrix = [reminder1Jobs, reminder2Jobs];
+
+    const expectedEmails = [TEST_EMAIL, TEST_EMAIL_TWO];
+
+    jobsMatrix.forEach((jobs, j) => {
+      checkJobsHaveBeenProperlyScheduled({
+        jobs,
+        email: expectedEmails[j],
+        collection: updatedCollection,
+        reminderCreatedTime: reminderUpdatedTime,
+      });
+    });
+  };
+
 export const checkOldEmailJobsWereCancelled = async (
   removeEmailJobsSpy: jest.SpyInstance,
   collectionId: string,
