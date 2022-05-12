@@ -18,6 +18,15 @@ export const getCollectionByName = async (
   });
 };
 
+export const getCollectionById = async (
+  em: EntityManager<IDatabaseDriver<Connection>>,
+  uuid: string,
+) => {
+  return await em.findOne(NFTCollection, {
+    uuid,
+  });
+};
+
 export const createAndGetTestingModule = async () => {
   return await Test.createTestingModule(TESTING_MODULE_CONFIG).compile();
 };

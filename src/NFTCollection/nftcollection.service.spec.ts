@@ -17,12 +17,15 @@ import {
 } from '../testing';
 import {
   createAndGetTestingModule,
+  getCollectionById,
   getCollectionByName,
   setupTestDB,
   shutdownTestDB,
 } from '../testing/utils';
 import { NFTCollectionService } from './nftcollection.service';
 import { addDays } from 'date-fns';
+
+const NEW_COLLECTION_NAME = 'New name';
 
 describe('NFTCollectionService', () => {
   let service: NFTCollectionService;
@@ -73,11 +76,19 @@ describe('NFTCollectionService', () => {
 
     const updatedCollection = await service.updateNFTCollection(
       collection.uuid,
-      'New Name',
+      NEW_COLLECTION_NAME,
       newDate,
     );
 
-    expect(updatedCollection.name).toBe('New Name');
+    expect(updatedCollection.name).toBe(NEW_COLLECTION_NAME);
     expect(new Date(updatedCollection.launchDate)).toEqual(newDate);
+
+    const updatedCollectionFromDB = await getCollectionById(
+      em,
+      collection.uuid,
+    );
+
+    expect(updatedCollectionFromDB.name).toBe(NEW_COLLECTION_NAME);
+    expect(new Date(updatedCollectionFromDB.launchDate)).toEqual(newDate);
   });
 });
