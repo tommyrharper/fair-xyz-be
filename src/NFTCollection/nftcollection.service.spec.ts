@@ -104,6 +104,7 @@ describe('NFTCollectionService', () => {
       await createTwoRemindersForCollection(em, collection);
 
       const reminderUpdatedTime = new Date();
+
       const updatedCollection = await service.updateNFTCollection(
         collection.uuid,
         NEW_COLLECTION_NAME,
@@ -142,9 +143,35 @@ describe('NFTCollectionService', () => {
 
       const reminderUpdatedTime = new Date();
       const newLaunchDate = addDays(reminderUpdatedTime, 15);
+
       const updatedCollection = await service.updateNFTCollection(
         collection.uuid,
         undefined,
+        newLaunchDate,
+        true,
+      );
+
+      await checkAllEmailJobsForCollectionHaveBeenProperlyRescheduled({
+        removeEmailJobsSpy,
+        addEmailJobsSpy,
+        updatedCollection,
+        reminderUpdatedTime,
+      });
+    });
+
+    it('changing launchDate and name updates email reminder jobs', async () => {
+      const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
+      const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
+
+      const collection = await getCollectionByName(em, COLLECTION_NAME);
+      await createTwoRemindersForCollection(em, collection);
+
+      const reminderUpdatedTime = new Date();
+      const newLaunchDate = addDays(reminderUpdatedTime, 15);
+
+      const updatedCollection = await service.updateNFTCollection(
+        collection.uuid,
+        NEW_COLLECTION_NAME,
         newLaunchDate,
         true,
       );
