@@ -12,8 +12,6 @@
 
 ## Description
 
-Based on the [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
 Never forget your next NFT Collection launch again! Get emailed reminders just in time 😀  🎉  🎊  🍻  🎁
 
 ## Notes
