@@ -118,7 +118,12 @@ describe('NFTCollectionService', () => {
     await em.persistAndFlush([reminder1, reminder2]);
 
     const reminderUpdatedTime = new Date().getTime();
-    await service.updateNFTCollection(collection.uuid, NEW_COLLECTION_NAME);
+    await service.updateNFTCollection(
+      collection.uuid,
+      NEW_COLLECTION_NAME,
+      undefined,
+      true,
+    );
     // await waitForExpect(() => {
     // });
     expect(addEmailJobsSpy).toHaveBeenCalledTimes(2);

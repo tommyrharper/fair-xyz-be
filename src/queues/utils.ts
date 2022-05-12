@@ -68,8 +68,8 @@ const scheduleNewRemindersForCollection = async ({
     collection: nftCollection.uuid,
   });
 
-  reminders.forEach((reminder) => {
-    scheduleReminders({
+  return reminders.map((reminder) => {
+    return scheduleReminders({
       launchDate: nftCollection.launchDate,
       collectionName: nftCollection.name,
       collectionId: nftCollection.uuid,
