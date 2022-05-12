@@ -6,6 +6,8 @@ import { Reminder } from '../reminder/reminder.entity';
 import { NFTCollection } from './nftcollection.entity';
 import { getShouldUpdateCollection, handleUpdateCollection } from './utils';
 
+// TODO: refactor to change NFTCollection casing to nftCollection in folder and file names
+
 @Injectable()
 export class NFTCollectionService {
   constructor(
