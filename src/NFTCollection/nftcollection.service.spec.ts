@@ -1,5 +1,5 @@
 import { emailQueue } from './../queues/email.queue';
-import { Test, TestingModule } from '@nestjs/testing';
+import { TestingModule } from '@nestjs/testing';
 import {
   Connection,
   EntityManager,
@@ -7,16 +7,8 @@ import {
   IMigrator,
   MikroORM,
 } from '@mikro-orm/core';
-import { Job, JobOptions } from 'bull';
-import {
-  COLLECTION_NAME,
-  HALF_HOUR_IN_MILLISECONDS,
-  ONE_DAY_IN_MILLISECONDS,
-  ONE_HOUR_IN_MILLISECONDS,
-  QUARTER_OF_A_SECOND,
-  TEST_EMAIL,
-  TEST_EMAIL_TWO,
-} from '../testing';
+import { Job } from 'bull';
+import { COLLECTION_NAME, TEST_EMAIL, TEST_EMAIL_TWO } from '../testing';
 import {
   checkJobsHaveBeenProperlyScheduled,
   createAndGetTestingModule,
