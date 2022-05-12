@@ -89,7 +89,7 @@ export const handleUpdatingReminderJobs = async ({
 }: HandleUpdatingReminderJobsArgs) => {
   deleteAllJobsForCollection(nftCollection.uuid);
 
-  if (nftCollection.launchDate === null) return;
+  if (nftCollection.launchDate === null) return Promise.resolve([]);
 
   return scheduleNewRemindersForCollection({
     remindersRepository,

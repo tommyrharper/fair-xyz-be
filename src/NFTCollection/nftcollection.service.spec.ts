@@ -44,6 +44,7 @@ describe('NFTCollectionService', () => {
 
   afterEach(async () => {
     await shutdownTestDB(migrator, orm);
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -67,31 +68,31 @@ describe('NFTCollectionService', () => {
     });
   });
 
-  it('updateNFTCollection endpoint updates collection', async () => {
-    const collection = await getCollectionByName(em, COLLECTION_NAME);
-
-    const newDate = addDays(new Date(), 10);
-
-    const updatedCollection = await service.updateNFTCollection(
-      collection.uuid,
-      NEW_COLLECTION_NAME,
-      newDate,
-    );
-
-    expect(updatedCollection.name).toBe(NEW_COLLECTION_NAME);
-    expect(new Date(updatedCollection.launchDate)).toEqual(newDate);
-
-    em.clear();
-
-    const updatedCollectionFromDB = await getCollectionById(
-      em,
-      collection.uuid,
-    );
-
-    expect(updatedCollectionFromDB.name).toBe(NEW_COLLECTION_NAME);
-  });
-
   describe('updateNFTCollection', () => {
+    it('endpoint updates collection', async () => {
+      const collection = await getCollectionByName(em, COLLECTION_NAME);
+
+      const newDate = addDays(new Date(), 10);
+
+      const updatedCollection = await service.updateNFTCollection(
+        collection.uuid,
+        NEW_COLLECTION_NAME,
+        newDate,
+      );
+
+      expect(updatedCollection.name).toBe(NEW_COLLECTION_NAME);
+      expect(new Date(updatedCollection.launchDate)).toEqual(newDate);
+
+      em.clear();
+
+      const updatedCollectionFromDB = await getCollectionById(
+        em,
+        collection.uuid,
+      );
+
+      expect(updatedCollectionFromDB.name).toBe(NEW_COLLECTION_NAME);
+    });
+
     it('changing collection name updates email reminder jobs', async () => {
       const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
       const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
@@ -109,7 +110,7 @@ describe('NFTCollectionService', () => {
       await em.persistAndFlush([reminder1, reminder2]);
 
       const reminderUpdatedTime = new Date();
-      await service.updateNFTCollection(
+      const updatedCollection = await service.updateNFTCollection(
         collection.uuid,
         NEW_COLLECTION_NAME,
         undefined,
@@ -131,10 +132,34 @@ describe('NFTCollectionService', () => {
         checkJobsHaveBeenProperlyScheduled({
           jobs,
           email: expectedEmails[j],
-          collection,
+          collection: updatedCollection,
           reminderCreatedTime: reminderUpdatedTime,
         });
       });
+    });
+
+    it('changing launchDate to null cancels email reminders', async () => {
+      const addEmailJobsSpy = jest.spyOn(emailQueue, 'addBulk');
+      const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
+
+      const collection = await getCollectionByName(em, COLLECTION_NAME);
+
+      const reminder1 = new Reminder();
+      reminder1.email = TEST_EMAIL;
+      reminder1.collection = collection;
+
+      const reminder2 = new Reminder();
+      reminder2.email = TEST_EMAIL_TWO;
+      reminder2.collection = collection;
+
+      await em.persistAndFlush([reminder1, reminder2]);
+
+      await service.updateNFTCollection(collection.uuid, undefined, null, true);
+
+      expect(removeEmailJobsSpy).toHaveBeenCalledTimes(1);
+      expect(removeEmailJobsSpy).toHaveBeenCalledWith(`${collection.uuid}*`);
+
+      expect(addEmailJobsSpy).not.toHaveBeenCalled();
     });
   });
 });
