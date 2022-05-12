@@ -12,6 +12,7 @@ import { COLLECTION_NAME, TEST_EMAIL, TEST_EMAIL_TWO } from '../testing';
 import {
   checkJobsHaveBeenProperlyScheduled,
   createAndGetTestingModule,
+  createTwoRemindersForCollection,
   getCollectionById,
   getCollectionByName,
   setupTestDB,
@@ -98,16 +99,7 @@ describe('NFTCollectionService', () => {
       const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
 
       const collection = await getCollectionByName(em, COLLECTION_NAME);
-
-      const reminder1 = new Reminder();
-      reminder1.email = TEST_EMAIL;
-      reminder1.collection = collection;
-
-      const reminder2 = new Reminder();
-      reminder2.email = TEST_EMAIL_TWO;
-      reminder2.collection = collection;
-
-      await em.persistAndFlush([reminder1, reminder2]);
+      await createTwoRemindersForCollection(em, collection);
 
       const reminderUpdatedTime = new Date();
       const updatedCollection = await service.updateNFTCollection(
@@ -143,16 +135,7 @@ describe('NFTCollectionService', () => {
       const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
 
       const collection = await getCollectionByName(em, COLLECTION_NAME);
-
-      const reminder1 = new Reminder();
-      reminder1.email = TEST_EMAIL;
-      reminder1.collection = collection;
-
-      const reminder2 = new Reminder();
-      reminder2.email = TEST_EMAIL_TWO;
-      reminder2.collection = collection;
-
-      await em.persistAndFlush([reminder1, reminder2]);
+      await createTwoRemindersForCollection(em, collection);
 
       await service.updateNFTCollection(collection.uuid, undefined, null, true);
 
@@ -169,16 +152,7 @@ describe('NFTCollectionService', () => {
       const removeEmailJobsSpy = jest.spyOn(emailQueue, 'removeJobs');
 
       const collection = await getCollectionByName(em, COLLECTION_NAME);
-
-      const reminder1 = new Reminder();
-      reminder1.email = TEST_EMAIL;
-      reminder1.collection = collection;
-
-      const reminder2 = new Reminder();
-      reminder2.email = TEST_EMAIL_TWO;
-      reminder2.collection = collection;
-
-      await em.persistAndFlush([reminder1, reminder2]);
+      await createTwoRemindersForCollection(em, collection);
 
       const reminderUpdatedTime = new Date();
       const newLaunchDate = addDays(reminderUpdatedTime, 15);

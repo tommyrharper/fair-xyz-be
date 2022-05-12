@@ -7,6 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { Test } from '@nestjs/testing';
 import { Job } from 'bull';
+import { Reminder } from '../reminder/reminder.entity';
 import {
   HALF_HOUR_IN_MILLISECONDS,
   INITIAL_MIGRATION,
@@ -15,8 +16,27 @@ import {
   QUARTER_OF_A_SECOND,
   TESTING_MODULE_CONFIG,
   TEST_DB_CONFIG,
+  TEST_EMAIL,
+  TEST_EMAIL_TWO,
 } from '.';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+
+export const createTwoRemindersForCollection = async (
+  em: EntityManager<IDatabaseDriver<Connection>>,
+  collection: NFTCollection,
+) => {
+  const reminder1 = new Reminder();
+  reminder1.email = TEST_EMAIL;
+  reminder1.collection = collection;
+
+  const reminder2 = new Reminder();
+  reminder2.email = TEST_EMAIL_TWO;
+  reminder2.collection = collection;
+
+  await em.persistAndFlush([reminder1, reminder2]);
+
+  return [reminder1, reminder2];
+};
 
 // TODO: Refactor to use getEmailContentFunction ???
 
