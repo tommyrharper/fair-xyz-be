@@ -10,6 +10,7 @@ import {
 } from '@mikro-orm/core';
 import { Job } from 'bull';
 import {
+  COLLECTION_NAME,
   HALF_HOUR_IN_MILLISECONDS,
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
@@ -48,24 +49,21 @@ describe('ReminderService', () => {
   });
 
   it('createReminder should create a reminder', async () => {
-    const collectionName = 'Beauty Embodied';
-
-    const collection = await getCollectionByName(em, collectionName);
+    const collection = await getCollectionByName(em, COLLECTION_NAME);
 
     expect(collection).toBeDefined();
 
     const reminder = await service.createReminder(TEST_EMAIL, collection.uuid);
 
     expect(reminder.collection.uuid).toBe(collection.uuid);
-    expect(reminder.collection.name).toBe(collectionName);
+    expect(reminder.collection.name).toBe(COLLECTION_NAME);
     expect(reminder.email).toBe(TEST_EMAIL);
   });
 
   it('correct emails should be added to queue when a reminder is created', async () => {
-    const collectionName = 'Beauty Embodied';
     const addEmailsJobsSpy = jest.spyOn(emailQueue, 'addBulk');
 
-    const collection = await getCollectionByName(em, collectionName);
+    const collection = await getCollectionByName(em, COLLECTION_NAME);
     const reminderCreatedTime = new Date().getTime();
 
     await service.createReminder(TEST_EMAIL, collection.uuid);

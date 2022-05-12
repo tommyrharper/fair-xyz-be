@@ -9,6 +9,7 @@ import {
 } from '@mikro-orm/core';
 import { Job } from 'bull';
 import {
+  COLLECTION_NAME,
   HALF_HOUR_IN_MILLISECONDS,
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
@@ -69,8 +70,7 @@ describe('NFTCollectionService', () => {
   });
 
   it('updateNFTCollection endpoint updates collection', async () => {
-    const collectionName = 'Beauty Embodied';
-    const collection = await getCollectionByName(em, collectionName);
+    const collection = await getCollectionByName(em, COLLECTION_NAME);
 
     const newDate = addDays(new Date(), 10);
 
@@ -92,4 +92,8 @@ describe('NFTCollectionService', () => {
 
     expect(updatedCollectionFromDB.name).toBe(NEW_COLLECTION_NAME);
   });
+
+  // it('updateNFTCollection updates reminders', async () => {
+  //   const collection = await getCollectionByName(em, COLLECTION_NAME);
+  // });
 });

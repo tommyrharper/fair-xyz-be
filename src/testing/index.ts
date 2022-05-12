@@ -14,6 +14,7 @@ import { ReminderResolver } from '../reminder/reminder.resolver';
 import { ReminderService } from '../reminder/reminder.service';
 import { ModuleMetadata } from '@nestjs/common';
 
+export const COLLECTION_NAME = 'Beauty Embodied';
 export const TEST_EMAIL = 'example@gmail.com';
 export const ONE_DAY_IN_MILLISECONDS = 86_400_000;
 export const ONE_HOUR_IN_MILLISECONDS = 3_600_000;
