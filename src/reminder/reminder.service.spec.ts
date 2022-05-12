@@ -19,6 +19,7 @@ import {
   MikroORM,
 } from '@mikro-orm/core';
 import { GRAPHQL_CONFIG } from '../app.module';
+import { Job } from 'bull';
 
 const TEST_EMAIL = 'example@gmail.com';
 
@@ -99,61 +100,24 @@ describe('ReminderService', () => {
       name: collectionName,
     });
 
-    expect(collection).toBeDefined();
-
     await service.createReminder(TEST_EMAIL, collection.uuid);
 
     expect(addBulkSpy).toHaveBeenCalledTimes(1);
-    expect(addBulkSpy).toHaveBeenCalledWith([
-      {
-        data: {
-          email: TEST_EMAIL,
-          text: 'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 1 DAY',
-        },
-        opts: {
-          delay: expect.anything(),
-          jobId: `${collection.uuid}-${TEST_EMAIL}-0`,
-          removeOnComplete: true,
-        },
-      },
-      {
-        data: {
-          email: TEST_EMAIL,
-          text: 'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 1 HOUR',
-        },
-        opts: {
-          delay: expect.anything(),
-          jobId: `${collection.uuid}-${TEST_EMAIL}-1`,
-          removeOnComplete: true,
-        },
-      },
-      {
-        data: {
-          email: TEST_EMAIL,
-          text: 'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 30 MINS',
-        },
-        opts: {
-          delay: expect.anything(),
-          jobId: `${collection.uuid}-${TEST_EMAIL}-2`,
-          removeOnComplete: true,
-        },
-      },
-      {
-        data: {
-          email: TEST_EMAIL,
-          text: 'BEAUTY EMBODIED IS LAUNCHING NOW!',
-        },
-        opts: {
-          delay: expect.anything(),
-          jobId: `${collection.uuid}-${TEST_EMAIL}-3`,
-          removeOnComplete: true,
-        },
-      },
-    ]);
+    const jobs: Job[] = await addBulkSpy.mock.results[0].value;
+    expect(jobs.length).toBe(4);
 
-    const jobs = await addBulkSpy.mock.results[0].value;
+    const expectedEmailContent = [
+      'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 1 DAY',
+      'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 1 HOUR',
+      'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 30 MINS',
+      'BEAUTY EMBODIED IS LAUNCHING NOW!',
+    ];
 
-    jobs.forEach((job) => {
+    jobs.forEach((job, i) => {
+      expect(job.id).toBe(`${collection.uuid}-${TEST_EMAIL}-${i}`);
+      expect(job.data.email).toBe(TEST_EMAIL);
+      expect(job.data.text).toBe(expectedEmailContent[i]);
+
       job.remove();
     });
   });
