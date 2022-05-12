@@ -18,6 +18,7 @@ import {
   TEST_EMAIL_TWO,
 } from '../testing';
 import {
+  checkJobsHaveBeenProperlyScheduled,
   createAndGetTestingModule,
   getCollectionById,
   getCollectionByName,
@@ -115,7 +116,7 @@ describe('NFTCollectionService', () => {
 
     await em.persistAndFlush([reminder1, reminder2]);
 
-    const reminderUpdatedTime = new Date().getTime();
+    const reminderUpdatedTime = new Date();
     await service.updateNFTCollection(
       collection.uuid,
       NEW_COLLECTION_NAME,
@@ -132,36 +133,11 @@ describe('NFTCollectionService', () => {
     const expectedEmails = [TEST_EMAIL, TEST_EMAIL_TWO];
 
     jobsMatrix.forEach((jobs, j) => {
-      expect(jobs.length).toBe(4);
-
-      const expectedEmail = expectedEmails[j];
-
-      const expectedEmailContent = [
-        'REMINDER - THE COLLECTION NEW NAME LAUNCHES IN 1 DAY',
-        'REMINDER - THE COLLECTION NEW NAME LAUNCHES IN 1 HOUR',
-        'REMINDER - THE COLLECTION NEW NAME LAUNCHES IN 30 MINS',
-        'NEW NAME IS LAUNCHING NOW!',
-      ];
-
-      const launchTime = new Date(collection.launchDate).getTime();
-      const expectedDelayLength = [
-        launchTime - reminderUpdatedTime - ONE_DAY_IN_MILLISECONDS,
-        launchTime - reminderUpdatedTime - ONE_HOUR_IN_MILLISECONDS,
-        launchTime - reminderUpdatedTime - HALF_HOUR_IN_MILLISECONDS,
-        launchTime - reminderUpdatedTime - 0,
-      ];
-
-      jobs.forEach((job, i) => {
-        expect(job.id).toBe(`${collection.uuid}-${expectedEmail}-${i}`);
-        expect(job.data.email).toBe(expectedEmail);
-        expect(job.data.text).toBe(expectedEmailContent[i]);
-
-        const timingError = Math.abs(expectedDelayLength[i] - job.opts.delay);
-
-        // This tests that each email with be sent within 250ms of the expected time frame
-        expect(timingError).toBeLessThan(QUARTER_OF_A_SECOND);
-
-        job.remove();
+      checkJobsHaveBeenProperlyScheduled({
+        jobs,
+        email: expectedEmails[j],
+        collection,
+        reminderCreatedTime: reminderUpdatedTime,
       });
     });
   });
