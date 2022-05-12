@@ -1,5 +1,5 @@
 import { emailQueue } from './../queues/email.queue';
-import { Test, TestingModule } from '@nestjs/testing';
+import { TestingModule } from '@nestjs/testing';
 import { ReminderService } from './reminder.service';
 import {
   Connection,
@@ -15,10 +15,13 @@ import {
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
   QUARTER_OF_A_SECOND,
-  TEST_DB_CONFIG,
   TEST_EMAIL,
 } from '../testing';
-import { createAndGetTestingModule, getCollection } from '../testing/utils';
+import {
+  createAndGetTestingModule,
+  getCollection,
+  setupTestDB,
+} from '../testing/utils';
 
 describe('ReminderService', () => {
   let service: ReminderService;
@@ -30,11 +33,10 @@ describe('ReminderService', () => {
     const module: TestingModule = await createAndGetTestingModule();
     service = module.get<ReminderService>(ReminderService);
 
-    orm = await MikroORM.init(TEST_DB_CONFIG);
-    em = orm.em;
-
-    migrator = orm.getMigrator();
-    await migrator.up();
+    const { testMigrator, testOrm, testEm } = await setupTestDB();
+    migrator = testMigrator;
+    orm = testOrm;
+    em = testEm;
   });
 
   afterEach(async () => {
