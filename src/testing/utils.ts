@@ -3,9 +3,10 @@ import {
   IDatabaseDriver,
   Connection,
   MikroORM,
+  IMigrator,
 } from '@mikro-orm/core';
 import { Test } from '@nestjs/testing';
-import { TESTING_MODULE_CONFIG, TEST_DB_CONFIG } from '.';
+import { INITIAL_MIGRATION, TESTING_MODULE_CONFIG, TEST_DB_CONFIG } from '.';
 import { NFTCollection } from '../NFTCollection/nftcollection.entity';
 
 export const getCollection = async (
@@ -33,4 +34,12 @@ export const setupTestDB = async () => {
     testOrm,
     testEm,
   };
+};
+
+export const shutdownTestDB = async (
+  migrator: IMigrator,
+  orm: MikroORM<IDatabaseDriver<Connection>>,
+) => {
+  await migrator.down({ to: INITIAL_MIGRATION });
+  await orm.close(true);
 };

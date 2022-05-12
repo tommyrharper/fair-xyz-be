@@ -21,6 +21,7 @@ import {
   createAndGetTestingModule,
   getCollection,
   setupTestDB,
+  shutdownTestDB,
 } from '../testing/utils';
 
 describe('ReminderService', () => {
@@ -40,8 +41,7 @@ describe('ReminderService', () => {
   });
 
   afterEach(async () => {
-    await migrator.down({ to: INITIAL_MIGRATION });
-    await orm.close(true);
+    await shutdownTestDB(migrator, orm);
   });
 
   it('should be defined', () => {
