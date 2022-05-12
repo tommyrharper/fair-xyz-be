@@ -1,6 +1,5 @@
-import { emailQueue } from './../queues/email.queue';
+import { emailQueue } from '../queues/email.queue';
 import { TestingModule } from '@nestjs/testing';
-import { ReminderService } from './reminder.service';
 import {
   Connection,
   EntityManager,
@@ -17,16 +16,17 @@ import {
   setupTestDB,
   shutdownTestDB,
 } from '../testing/utils';
+import { ReminderResolver } from './reminder.resolver';
 
-describe('ReminderService', () => {
-  let service: ReminderService;
+describe('ReminderResolver', () => {
+  let appController: ReminderResolver;
   let migrator: IMigrator;
   let orm: MikroORM<IDatabaseDriver<Connection>>;
   let em: EntityManager<IDatabaseDriver<Connection>>;
 
   beforeEach(async () => {
     const module: TestingModule = await createAndGetTestingModule();
-    service = module.get<ReminderService>(ReminderService);
+    appController = module.get<ReminderResolver>(ReminderResolver);
 
     const { testMigrator, testOrm, testEm } = await setupTestDB();
     migrator = testMigrator;
@@ -39,7 +39,7 @@ describe('ReminderService', () => {
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(appController).toBeDefined();
   });
 
   it('createReminder should create a reminder', async () => {
@@ -47,7 +47,10 @@ describe('ReminderService', () => {
 
     expect(collection).toBeDefined();
 
-    const reminder = await service.createReminder(TEST_EMAIL, collection.uuid);
+    const reminder = await appController.createReminder(
+      TEST_EMAIL,
+      collection.uuid,
+    );
 
     expect(reminder.collection.uuid).toBe(collection.uuid);
     expect(reminder.collection.name).toBe(COLLECTION_NAME);
@@ -60,7 +63,7 @@ describe('ReminderService', () => {
     const collection = await getCollectionByName(em, COLLECTION_NAME);
     const reminderCreatedTime = new Date();
 
-    await service.createReminder(TEST_EMAIL, collection.uuid);
+    await appController.createReminder(TEST_EMAIL, collection.uuid);
     expect(addEmailsJobsSpy).toHaveBeenCalledTimes(1);
 
     const jobs: Job[] = await addEmailsJobsSpy.mock.results[0].value;

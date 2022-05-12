@@ -1,4 +1,4 @@
-import { emailQueue } from './../queues/email.queue';
+import { emailQueue } from '../queues/email.queue';
 import { TestingModule } from '@nestjs/testing';
 import {
   Connection,
@@ -18,20 +18,20 @@ import {
   setupTestDB,
   shutdownTestDB,
 } from '../testing/utils';
-import { NFTCollectionService } from './nftcollection.service';
 import { addDays } from 'date-fns';
+import { NFTCollectionResolver } from './nftcollection.resolver';
 
 const NEW_COLLECTION_NAME = 'New name';
 
-describe('NFTCollectionService', () => {
-  let service: NFTCollectionService;
+describe('NFTCollectionResolver', () => {
+  let appController: NFTCollectionResolver;
   let migrator: IMigrator;
   let orm: MikroORM<IDatabaseDriver<Connection>>;
   let em: EntityManager<IDatabaseDriver<Connection>>;
 
   beforeEach(async () => {
     const module: TestingModule = await createAndGetTestingModule();
-    service = module.get<NFTCollectionService>(NFTCollectionService);
+    appController = module.get<NFTCollectionResolver>(NFTCollectionResolver);
 
     const { testMigrator, testOrm, testEm } = await setupTestDB();
     migrator = testMigrator;
@@ -45,11 +45,11 @@ describe('NFTCollectionService', () => {
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(appController).toBeDefined();
   });
 
   it('getNFTCollections returns all collections', async () => {
-    const nftCollections = await service.getNFTCollections();
+    const nftCollections = await appController.getNFTCollections();
 
     expect(nftCollections.length).toBe(6);
 
@@ -71,7 +71,7 @@ describe('NFTCollectionService', () => {
 
       const newDate = addDays(new Date(), 10);
 
-      const updatedCollection = await service.updateNFTCollection(
+      const updatedCollection = await appController.updateNFTCollection(
         collection.uuid,
         NEW_COLLECTION_NAME,
         newDate,
@@ -97,7 +97,7 @@ describe('NFTCollectionService', () => {
       const collection = await getCollectionByName(em, COLLECTION_NAME);
       await createTwoRemindersForCollection(em, collection);
 
-      await service.updateNFTCollection(collection.uuid, undefined, null);
+      await appController.updateNFTCollection(collection.uuid, undefined, null);
 
       checkOldEmailJobsWereCancelled(removeEmailJobsSpy, collection.uuid);
 
@@ -114,7 +114,7 @@ describe('NFTCollectionService', () => {
 
         const reminderUpdatedTime = new Date();
 
-        const updatedCollection = await service.updateNFTCollection(
+        const updatedCollection = await appController.updateNFTCollection(
           collection.uuid,
           NEW_COLLECTION_NAME,
           undefined,
@@ -138,7 +138,7 @@ describe('NFTCollectionService', () => {
         const reminderUpdatedTime = new Date();
         const newLaunchDate = addDays(reminderUpdatedTime, 15);
 
-        const updatedCollection = await service.updateNFTCollection(
+        const updatedCollection = await appController.updateNFTCollection(
           collection.uuid,
           undefined,
           newLaunchDate,
@@ -162,7 +162,7 @@ describe('NFTCollectionService', () => {
         const reminderUpdatedTime = new Date();
         const newLaunchDate = addDays(reminderUpdatedTime, 15);
 
-        const updatedCollection = await service.updateNFTCollection(
+        const updatedCollection = await appController.updateNFTCollection(
           collection.uuid,
           NEW_COLLECTION_NAME,
           newLaunchDate,
