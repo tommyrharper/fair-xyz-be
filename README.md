@@ -125,28 +125,31 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Setting up the DBs
+## Setting up the DBs from pgAdmin
 
 
-Then I opened up pgAdmin. Created a new server:
+1. Open up pgAdmin.
+2. Created a new server:
 ```
 General => Name: fair-xyz
 Connection => Host name/address: localhost. Port => 5432. Password: postgres. Save password => true.
 ```
 
-The db is here: Servers -> fair-xyz -> Databases -> postgres;
-Next I created a db using the GUI:
+3. Create the databases:
+
+- The database section shouldis here: Servers -> fair-xyz -> Databases -> postgres;
+- Next I created a db using the GUI:
    - Right click Databases -> Create -> Database: fair-xyz -> Save.
    - Right click Databases -> Create -> Database: fair-xyz-test -> Save.
 
 
-- Then I ran the migrations:
+4. Run the migrations if you haven't already:
 ```
 npx mikro-orm migration:up
 ```
 
 - Should now be able to see in pgAdmin: fair-xyz => Databases => fair-xyz => Schemas => Tables => student => Columns (6)
-- Now you can boot the server and execute a mutation
+- Now you can boot the server and execute a query or mutation at `http://localhost:3000/graphql`
 
 ## Queries
 
