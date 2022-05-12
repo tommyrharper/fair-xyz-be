@@ -1,6 +1,5 @@
 import { emailQueue } from './../queues/email.queue';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NFTCollection } from '../NFTCollection/nftcollection.entity';
 import { ReminderService } from './reminder.service';
 import {
   Connection,
@@ -20,6 +19,7 @@ import {
   TEST_DB_CONFIG,
   TEST_EMAIL,
 } from '../testing';
+import { getCollection } from '../testing/utils';
 
 describe('ReminderService', () => {
   let service: ReminderService;
@@ -52,9 +52,7 @@ describe('ReminderService', () => {
   it('createReminder should create a reminder', async () => {
     const collectionName = 'Beauty Embodied';
 
-    const collection = await em.findOne(NFTCollection, {
-      name: collectionName,
-    });
+    const collection = await getCollection(em, collectionName);
 
     expect(collection).toBeDefined();
 
@@ -67,17 +65,15 @@ describe('ReminderService', () => {
 
   it('correct emails should be added to queue when a reminder is created', async () => {
     const collectionName = 'Beauty Embodied';
-    const addBulkSpy = jest.spyOn(emailQueue, 'addBulk');
+    const addEmailsJobsSpy = jest.spyOn(emailQueue, 'addBulk');
 
-    const collection = await em.findOne(NFTCollection, {
-      name: collectionName,
-    });
-
+    const collection = await getCollection(em, collectionName);
     const reminderCreatedTime = new Date().getTime();
-    await service.createReminder(TEST_EMAIL, collection.uuid);
 
-    expect(addBulkSpy).toHaveBeenCalledTimes(1);
-    const jobs: Job[] = await addBulkSpy.mock.results[0].value;
+    await service.createReminder(TEST_EMAIL, collection.uuid);
+    expect(addEmailsJobsSpy).toHaveBeenCalledTimes(1);
+
+    const jobs: Job[] = await addEmailsJobsSpy.mock.results[0].value;
     expect(jobs.length).toBe(4);
 
     const expectedEmailContent = [
