@@ -1,3 +1,4 @@
+import { emailQueue } from './../queues/email.queue';
 import { MikroOrmModule, MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs';
 import { GraphQLModule } from '@nestjs/graphql';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -74,7 +75,7 @@ describe('ReminderService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create a reminder', async () => {
+  it('createReminder should create a reminder', async () => {
     const collectionName = 'Beauty Embodied';
 
     const collection = await em.findOne(NFTCollection, {
@@ -88,5 +89,72 @@ describe('ReminderService', () => {
     expect(reminder.collection.uuid).toBe(collection.uuid);
     expect(reminder.collection.name).toBe(collectionName);
     expect(reminder.email).toBe(TEST_EMAIL);
+  });
+
+  it('correct emails should be added to queue when a reminder is created', async () => {
+    const collectionName = 'Beauty Embodied';
+    const addBulkSpy = jest.spyOn(emailQueue, 'addBulk');
+
+    const collection = await em.findOne(NFTCollection, {
+      name: collectionName,
+    });
+
+    expect(collection).toBeDefined();
+
+    await service.createReminder(TEST_EMAIL, collection.uuid);
+
+    expect(addBulkSpy).toHaveBeenCalledTimes(1);
+    expect(addBulkSpy).toHaveBeenCalledWith([
+      {
+        data: {
+          email: TEST_EMAIL,
+          text: 'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 1 DAY',
+        },
+        opts: {
+          delay: expect.anything(),
+          jobId: `${collection.uuid}-${TEST_EMAIL}-0`,
+          removeOnComplete: true,
+        },
+      },
+      {
+        data: {
+          email: TEST_EMAIL,
+          text: 'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 1 HOUR',
+        },
+        opts: {
+          delay: expect.anything(),
+          jobId: `${collection.uuid}-${TEST_EMAIL}-1`,
+          removeOnComplete: true,
+        },
+      },
+      {
+        data: {
+          email: TEST_EMAIL,
+          text: 'REMINDER - THE COLLECTION BEAUTY EMBODIED LAUNCHES IN 30 MINS',
+        },
+        opts: {
+          delay: expect.anything(),
+          jobId: `${collection.uuid}-${TEST_EMAIL}-2`,
+          removeOnComplete: true,
+        },
+      },
+      {
+        data: {
+          email: TEST_EMAIL,
+          text: 'BEAUTY EMBODIED IS LAUNCHING NOW!',
+        },
+        opts: {
+          delay: expect.anything(),
+          jobId: `${collection.uuid}-${TEST_EMAIL}-3`,
+          removeOnComplete: true,
+        },
+      },
+    ]);
+
+    const jobs = await addBulkSpy.mock.results[0].value;
+
+    jobs.forEach((job) => {
+      job.remove();
+    });
   });
 });
