@@ -83,8 +83,6 @@ export const createTwoRemindersForCollection = async (
   return [reminder1, reminder2];
 };
 
-// TODO: Refactor to use getEmailContentFunction ???
-
 interface CheckJobsHaveBeenProperlyScheduledArgs {
   jobs: Job[];
   email: string;
