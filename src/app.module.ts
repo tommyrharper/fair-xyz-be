@@ -5,7 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ReminderModule } from './reminder/reminder.module';
-import { NFTCollectionModule } from './NFTCollection/nftcollection.module';
+import { NFTCollectionModule } from './nftCollection/nftCollection.module';
 
 export const GRAPHQL_CONFIG = {
   debug: true,

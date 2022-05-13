@@ -1,5 +1,5 @@
 import { EntityRepository, Loaded } from '@mikro-orm/core';
-import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+import { NFTCollection } from '../nftCollection/nftCollection.entity';
 import { ReminderEmailData } from '../processes/email.process';
 import {
   addEmailReminderJobsToQueue,

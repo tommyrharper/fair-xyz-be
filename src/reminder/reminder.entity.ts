@@ -5,7 +5,7 @@ import {
   Property,
   Unique,
 } from '@mikro-orm/core';
-import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+import { NFTCollection } from '../nftCollection/nftCollection.entity';
 
 @Entity()
 @Unique({ properties: ['email', 'collection'] })

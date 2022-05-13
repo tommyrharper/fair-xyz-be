@@ -1,5 +1,5 @@
 import { EntityRepository, Loaded } from '@mikro-orm/core';
-import { NFTCollection } from './nftcollection.entity';
+import { NFTCollection } from './nftCollection.entity';
 
 interface GetShouldUpdateLaunchDateArgs {
   oldLaunchDate: Date | null;

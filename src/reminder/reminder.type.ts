@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { NFTCollectionType } from '../NFTCollection/nftcollection.type';
+import { NFTCollectionType } from '../nftCollection/nftCollection.type';
 
 @ObjectType()
 export class ReminderType {

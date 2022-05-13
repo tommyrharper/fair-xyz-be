@@ -19,7 +19,7 @@ import {
   shutdownTestDB,
 } from '../testing/utils';
 import { addDays } from 'date-fns';
-import { NFTCollectionResolver } from './nftcollection.resolver';
+import { NFTCollectionResolver } from './nftCollection.resolver';
 
 const NEW_COLLECTION_NAME = 'New name';
 

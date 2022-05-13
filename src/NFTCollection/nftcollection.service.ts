@@ -3,7 +3,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { handleUpdatingReminderJobs } from '../queues/utils';
 import { Reminder } from '../reminder/reminder.entity';
-import { NFTCollection } from './nftcollection.entity';
+import { NFTCollection } from './nftCollection.entity';
 import { getShouldUpdateCollection, handleUpdateCollection } from './utils';
 
 // TODO: refactor to change NFTCollection casing to nftCollection in folder and file names

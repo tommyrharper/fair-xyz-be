@@ -19,7 +19,7 @@ import {
   TEST_EMAIL,
   TEST_EMAIL_TWO,
 } from '.';
-import { NFTCollection } from '../NFTCollection/nftcollection.entity';
+import { NFTCollection } from '../nftCollection/nftCollection.entity';
 import waitForExpect from 'wait-for-expect';
 
 interface CheckAllEmailJobsForCollectionHaveBeenProperlyRescheduledArgs {

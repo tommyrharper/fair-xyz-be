@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { NFTCollectionService } from './nftcollection.service';
-import { NFTCollectionType } from './nftcollection.type';
+import { NFTCollectionService } from './nftCollection.service';
+import { NFTCollectionType } from './nftCollection.type';
 
 @Resolver()
 export class NFTCollectionResolver {
