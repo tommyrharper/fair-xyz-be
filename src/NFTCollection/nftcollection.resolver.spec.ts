@@ -48,6 +48,17 @@ describe('NFTCollectionResolver', () => {
     expect(appController).toBeDefined();
   });
 
+  it('getNFTCollection returns specified collection', async () => {
+    const collection = await appController.getNFTCollection(COLLECTION_NAME);
+    const { name, launchDate, uuid, createdAt, updatedAt } = collection;
+
+    expect(uuid).toBeTruthy();
+    expect(name).toBe(COLLECTION_NAME);
+    expect(createdAt).toBeTruthy();
+    expect(updatedAt).toBeTruthy();
+    expect(launchDate).toBeTruthy();
+  });
+
   it('getNFTCollections returns all collections', async () => {
     const nftCollections = await appController.getNFTCollections();
 

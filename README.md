@@ -147,7 +147,7 @@ npx mikro-orm migration:up
 ```
 
 - Should now be able to see in pgAdmin: fair-xyz => Databases => fair-xyz => Schemas => Tables => student => Columns (6)
-- Now you can boot the server and execute a query or mutation at `http://localhost:3000/graphql`
+- Now you can boot the server and execute a query or mutation at `http://localhost:8000/graphql`
 
 ## Queries
 

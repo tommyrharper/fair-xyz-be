@@ -49,6 +49,10 @@ export class NFTCollectionService {
     return nftCollection;
   }
 
+  async getNFTCollection(name: string): Promise<NFTCollection> {
+    return this.nftCollectionsRepository.findOne({ name });
+  }
+
   async getNFTCollections(): Promise<NFTCollection[]> {
     return this.nftCollectionsRepository.findAll();
   }
