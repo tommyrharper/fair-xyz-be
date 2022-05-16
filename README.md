@@ -19,6 +19,8 @@ docker container ls # to check the dbs have been setup
 ```bash
 npx mikro-orm migration:up
 ```
+(If you got the error `role "postgres" does not exist`, you need to update your postgres user in `mikro-orm.config.ts`)
+
 4. Now you are ready to go!
 ```bash
 npm run start:dev
