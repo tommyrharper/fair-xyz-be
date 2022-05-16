@@ -7,7 +7,7 @@ export class NFTCollectionResolver {
   constructor(private reminderService: NFTCollectionService) {}
 
   // Queries
-  @Query(() => NFTCollectionType)
+  @Query(() => NFTCollectionType, { nullable: true })
   getNFTCollection(@Args({ name: 'name' }) name: string) {
     return this.reminderService.getNFTCollection(name);
   }

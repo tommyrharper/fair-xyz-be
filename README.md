@@ -97,27 +97,10 @@ npx mikro-orm migration:up
 npm run start:dev
 ```
 
-## Running the app
+## Running the Tests
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
@@ -149,43 +132,6 @@ npx mikro-orm migration:up
 - Should now be able to see in pgAdmin: fair-xyz => Databases => fair-xyz => Schemas => Tables => student => Columns (6)
 - Now you can boot the server and execute a query or mutation at `http://localhost:8000/graphql`
 
-## Queries
-
-```graphql
-query {
-  getNFTCollections {
-    uuid
-    name
-    launchDate
-  }
-}
-```
-
-## Mutations:
-
-```graphql
-mutation {
-  updateNFTCollection(uuid: "112f7f68-a519-445d-beaf-52e21a2d5f6d", launchDate: "2022-05-14 22:11:44+00") {
-    uuid
-    name
-    launchDate
-  }
-}
-```
-
-```graphql
-mutation {
-  createReminder(email: "example@gmail.com", collection: "f8f454c9-531b-4984-971d-a432a5991cc9") {
-    uuid
-    email
-    collection {
-      uuid
-      name
-      launchDate
-    }
-  }
-}
-```
 
 ## Quick Start - If already installed and setup before
 
@@ -194,7 +140,3 @@ docker start fair-xyz
 docker start redis-fair-xyz
 npm run start:dev
 ```
-
-## Stay in touch
-
-- Author - [Tom Harper](https://github.com/tommyrharper)
