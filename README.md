@@ -68,23 +68,6 @@ You can also see [details on the integration from MikroORM's docs here](https://
 
 [TypeORM](https://typeorm.io/) is much more popular, but I wanted to try out the alternative.
 
-### Schema
-
-I decided to go for two simple entities:
-
-Table of emails (Reminder):
-- id: ID
-- email: String
-- collection: ID
-
-
-Table of collections (NFTCollection):
-- id: ID
-- name: String
-- launchDate: Date | null
-
-They both also have a `createdAt` and `updatedAt` date.
-
 ## Running the Tests
 
 ```bash
