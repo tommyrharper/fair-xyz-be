@@ -15,18 +15,17 @@ docker run --name redis-fair-xyz -d -p 6379:6379 redis:6.0
 docker container ls # to check the dbs have been setup
 ```
 
-3. Create two databases within `fair-xy`:
-     - `fair-xyz`
-     - `fair-xyz-test` (this is a test db, it is only needed for running the tests)
-
-4. Now you have the databases up, you can run the migrations
-```
+3. Now you have the databases up, you can run the migrations
+```bash
 npx mikro-orm migration:up
 ```
-5. Now you are ready to go!
+(If you got the error `role "postgres" does not exist`, you need to update your postgres user in `mikro-orm.config.ts`)
+
+4. Now you are ready to go!
 ```bash
 npm run start:dev
 ```
+- Now you can connect the FE or execute a query or mutation at `http://localhost:8000/graphql`
 
 ## Notes
 
@@ -68,23 +67,6 @@ You can also see [details on the integration from MikroORM's docs here](https://
 
 [TypeORM](https://typeorm.io/) is much more popular, but I wanted to try out the alternative.
 
-### Schema
-
-I decided to go for two simple entities:
-
-Table of emails (Reminder):
-- id: ID
-- email: String
-- collection: ID
-
-
-Table of collections (NFTCollection):
-- id: ID
-- name: String
-- launchDate: Date | null
-
-They both also have a `createdAt` and `updatedAt` date.
-
 ## Running the Tests
 
 ```bash
@@ -93,33 +75,6 @@ $ npm run test
 # test coverage
 $ npm run test:cov
 ```
-
-## Setting up the DBs from pgAdmin
-
-
-1. Open up pgAdmin.
-2. Created a new server:
-```
-General => Name: fair-xyz
-Connection => Host name/address: localhost. Port => 5432. Password: postgres. Save password => true.
-```
-
-3. Create the databases:
-
-- The database section shouldis here: Servers -> fair-xyz -> Databases -> postgres;
-- Next I created a db using the GUI:
-   - Right click Databases -> Create -> Database: fair-xyz -> Save.
-   - Right click Databases -> Create -> Database: fair-xyz-test -> Save.
-
-
-4. Run the migrations if you haven't already:
-```
-npx mikro-orm migration:up
-```
-
-- Should now be able to see in pgAdmin: fair-xyz => Databases => fair-xyz => Schemas => Tables => student => Columns (6)
-- Now you can boot the server and execute a query or mutation at `http://localhost:8000/graphql`
-
 
 ## Quick Start - If already installed and setup before
 
