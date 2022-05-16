@@ -1,18 +1,32 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A Nest.js application for sending NFT Collection launch reminder emails.</p>
-    <p align="center">
 <a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_95.svg#9" alt="Coverage" /></a>
-</p>
 
-## Description
+# FAIR-XYZ Take Home Challenge BE
 
-Never forget your next NFT Collection launch again! Get emailed reminders just in time 😀  🎉  🎊  🍻  🎁
+## Installation and Quick Start
+
+1. Install all the dependencies:
+```bash
+$ npm install
+```
+2. Boot docker instances for databases:
+```bash
+docker run --name fair-xyz --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
+docker run --name redis-fair-xyz -d -p 6379:6379 redis:6.0
+docker container ls # to check the dbs have been setup
+```
+
+3. Create two databases within `fair-xy`:
+     - `fair-xyz`
+     - `fair-xyz-test` (this is a test db, it is only needed for running the tests)
+
+4. Now you have the databases up, you can run the migrations
+```
+npx mikro-orm migration:up
+```
+5. Now you are ready to go!
+```bash
+npm run start:dev
+```
 
 ## Notes
 
@@ -70,32 +84,6 @@ Table of collections (NFTCollection):
 - launchDate: Date | null
 
 They both also have a `createdAt` and `updatedAt` date.
-
-## Installation and Quick Start
-
-1. Install all the dependencies:
-```bash
-$ npm install
-```
-2. Boot docker instances for databases:
-```bash
-docker run --name fair-xyz --publish 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
-docker run --name redis-fair-xyz -d -p 6379:6379 redis:6.0
-docker container ls # to check the dbs have been setup
-```
-
-3. Create two databases within `fair-xy`:
-     - `fair-xyz`
-     - `fair-xyz-test` (this is a test db, it is only needed for running the tests)
-
-4. Now you have the databases up, you can run the migrations
-```
-npx mikro-orm migration:up
-```
-5. Now you are ready to go!
-```bash
-npm run start:dev
-```
 
 ## Running the Tests
 
